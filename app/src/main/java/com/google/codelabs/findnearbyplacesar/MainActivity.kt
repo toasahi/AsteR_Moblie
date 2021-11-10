@@ -80,20 +80,29 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
         setContentView(R.layout.activity_main)
 
+        //PlacesArFragment.ktのクラスを呼び出す
         arFragment = supportFragmentManager.findFragmentById(R.id.ar_fragment) as PlacesArFragment
+
+        //マップを表示するためのフラグメント
         mapFragment =
             supportFragmentManager.findFragmentById(R.id.maps_fragment) as SupportMapFragment
 
+        //システムサービスを読み込み
         sensorManager = getSystemService()!!
+
+        //Google Map Places API
         placesService = PlacesService.create()
+        //位置情報API
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         setUpAr()
         setUpMaps()
     }
 
+    //アクティビティ再開時
     override fun onResume() {
         super.onResume()
+        //センサー登録？
         sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)?.also {
             sensorManager.registerListener(
                 this,
@@ -110,12 +119,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    //アクティビティ停止時
     override fun onPause() {
         super.onPause()
+        //センサー登録解除
         sensorManager.unregisterListener(this)
     }
 
     private fun setUpAr() {
+        //タップされた時の処理？
         arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
             // Create anchor
             val anchor = hitResult.createAnchor()
@@ -124,22 +136,25 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             addPlaces(anchorNode!!)
         }
     }
-
+    //表示するピンの場所を取得
     private fun addPlaces(anchorNode: AnchorNode) {
+        //現在地
         val currentLocation = currentLocation
         if (currentLocation == null) {
             Log.w(TAG, "Location has not been determined yet")
             return
         }
 
+        //ピンの場所
         val places = places
         if (places == null) {
             Log.w(TAG, "No places to put")
             return
         }
 
+        //場所を順番に取得する
         for (place in places) {
-            // Add the place in AR
+            // ARに場所を追加
             val placeNode = PlaceNode(this, place)
             placeNode.setParent(anchorNode)
             placeNode.localPosition = place.getPositionVector(orientationAngles[0], currentLocation.latLng)
@@ -147,7 +162,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 showInfoWindow(place)
             }
 
-            // Add the place in maps
+            //マップにピンを配置する
             map?.let {
                 val marker = it.addMarker(
                     MarkerOptions()
@@ -161,7 +176,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun showInfoWindow(place: Place) {
-        // Show in AR
+        // ARに表示
         val matchingPlaceNode = anchorNode?.children?.filter {
             it is PlaceNode
         }?.first {
@@ -170,7 +185,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         } as? PlaceNode
         matchingPlaceNode?.showInfoWindow()
 
-        // Show as marker
+        // マーカーとして表示
         val matchingMarker = markers.firstOrNull {
             val placeTag = (it.tag as? Place) ?: return@firstOrNull false
             return@firstOrNull placeTag == place
@@ -180,6 +195,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 
     private fun setUpMaps() {
+        //マップの初期化
         mapFragment.getMapAsync { googleMap ->
             googleMap.isMyLocationEnabled = true
 
@@ -200,6 +216,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    //現在地の取得
     private fun getCurrentLocation(onSuccess: (Location) -> Unit) {
 
 
@@ -214,6 +231,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         }
     }
 
+    //近くの場所を取得
     private fun getNearbyPlaces(location: Location) {
         val apiKey = this.getString(R.string.google_maps_key)
 
@@ -245,7 +263,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         )
     }
 
-
+    //端末チェック
     private fun isSupportedDevice(): Boolean {
         val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val openGlVersionString = activityManager.deviceConfigurationInfo.glEsVersion
@@ -258,9 +276,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         return true
     }
 
+
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 
+    //センサーの向きが変更されたとき
     override fun onSensorChanged(event: SensorEvent?) {
         if (event == null) {
             return
@@ -282,6 +302,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 }
 
+//位置の座標
 val Location.latLng: LatLng
     get() = LatLng(this.latitude, this.longitude)
 
