@@ -56,6 +56,7 @@ class PlaceNode(
 
     }
 
+
     fun showInfoWindow() {
         // Show text
         textViewPlace?.let {
