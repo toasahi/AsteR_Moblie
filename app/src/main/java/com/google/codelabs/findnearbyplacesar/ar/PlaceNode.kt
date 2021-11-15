@@ -53,6 +53,7 @@ class PlaceNode(
                     textViewPlace?.text = it.name
                 }
             }
+
     }
 
     fun showInfoWindow() {
