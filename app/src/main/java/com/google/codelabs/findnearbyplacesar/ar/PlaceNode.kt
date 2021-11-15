@@ -42,7 +42,7 @@ class PlaceNode(
         }
 
         ViewRenderable.builder()
-            .setView(context, R.layout.place_view)
+            .setView(context, R.layout.arrow)
             .build()
             .thenAccept { renderable ->
                 setRenderable(renderable)
