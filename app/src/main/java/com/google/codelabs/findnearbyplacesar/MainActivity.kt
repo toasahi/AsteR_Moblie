@@ -25,6 +25,7 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -43,6 +44,8 @@ import com.google.codelabs.findnearbyplacesar.api.NearbyPlacesResponse
 import com.google.codelabs.findnearbyplacesar.api.PlacesService
 import com.google.codelabs.findnearbyplacesar.ar.PlaceNode
 import com.google.codelabs.findnearbyplacesar.ar.PlacesArFragment
+import com.google.codelabs.findnearbyplacesar.model.Geometry
+import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
 import com.google.codelabs.findnearbyplacesar.model.getPositionVector
 import retrofit2.Call
@@ -193,6 +196,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         matchingMarker?.showInfoWindow()
     }
 
+//    override fun onOptionsItemSelected(place: Place): Boolean {
+//
+//        map?.addMarker(
+//            MarkerOptions()
+//                .position(place.geometry.location.latLng)
+//                .title(place.name)
+//        )
+//    }
 
     private fun setUpMaps() {
         //マップの初期化
@@ -232,6 +243,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     //近くの場所を取得
+    //ここでは"school"を取得
     private fun getNearbyPlaces(location: Location) {
         val apiKey = this.getString(R.string.google_maps_key)
 
@@ -255,8 +267,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         return
                     }
 
-                    val places = response.body()?.results ?: emptyList()
-                    Log.e("test", places.toString());
+//                    val places = response.body()?.results ?: emptyList()
+                    val dog = Place("", "", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.6945595, lng=135.1831582)));
+                    val cat = Place("y", "", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.697075, lng=135.196543)));
+                    val places = listOf(dog, cat);
+                    Log.d("ahobaka", places.toString());
                     this@MainActivity.places = places
                 }
             }
