@@ -29,7 +29,7 @@ class PlaceNode(
 
     private var placeRenderable: ViewRenderable? = null
     private var textViewPlace: TextView? = null
-
+    
     override fun onActivate() {
         super.onActivate()
 
@@ -41,18 +41,39 @@ class PlaceNode(
             return
         }
 
-        ViewRenderable.builder()
-            .setView(context, R.layout.place_view)
-            .build()
-            .thenAccept { renderable ->
-                setRenderable(renderable)
-                placeRenderable = renderable
 
-                place?.let {
-                    textViewPlace = renderable.view.findViewById(R.id.placeName)
-                    textViewPlace?.text = it.name
-                }
+        if (place != null) {
+            if(place.id == "y"){
+                ViewRenderable.builder()
+                        .setView(context, R.layout.arrow2)
+                        .build()
+                        .thenAccept { renderable ->
+                            setRenderable(renderable)
+                            placeRenderable = renderable
+
+                            place?.let {
+                                textViewPlace = renderable.view.findViewById(R.id.placeName)
+                                textViewPlace?.text = it.name
+                            }
+                        }
+
+            }else {
+                ViewRenderable.builder()
+                        .setView(context, R.layout.place_view)
+                        .build()
+                        .thenAccept { renderable ->
+                            setRenderable(renderable)
+                            placeRenderable = renderable
+
+                            place?.let {
+                                textViewPlace = renderable.view.findViewById(R.id.placeName)
+                                textViewPlace?.text = it.name
+                            }
+                        }
             }
+
+        }
+
 
     }
 

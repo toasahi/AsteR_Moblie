@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/linearLayout">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/arrow" />
+        app:srcCompat="@drawable/arrow"
+        tools:layout_conversion_absoluteHeight="419dp"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_conversion_absoluteWidth="411dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        tools:layout_conversion_absoluteHeight="19dp"
+        tools:layout_editor_absoluteY="419dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_conversion_absoluteWidth="411dp" />
 </LinearLayout>
