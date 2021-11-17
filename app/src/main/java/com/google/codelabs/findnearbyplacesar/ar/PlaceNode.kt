@@ -55,7 +55,6 @@ class PlaceNode(
                         textViewPlace?.text = it.name
                     }
                 }
-
         }else{
             ViewRenderable.builder()
                 .setView(context, R.layout.place_view)
