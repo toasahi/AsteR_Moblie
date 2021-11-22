@@ -25,7 +25,7 @@ import kotlin.math.sin
  */
 data class Place(
     val id: String,
-    val text: String,
+    val icon: String,
     val name: String,
     val geometry: Geometry
 ) {

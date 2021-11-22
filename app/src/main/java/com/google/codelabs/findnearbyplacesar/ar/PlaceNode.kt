@@ -42,9 +42,9 @@ class PlaceNode(
         }
 
 
+
         if (place != null) {
             if(place.id == "y"){
-
 
                 ViewRenderable.builder()
                         .setView(context, R.layout.arrow2)
@@ -74,9 +74,6 @@ class PlaceNode(
                             }
                         }
             }
-
-        }
-
 
     }
 
