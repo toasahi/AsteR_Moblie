@@ -26,11 +26,11 @@ class PlacesArFragment : ArFragment() {
         listOf(Manifest.permission.ACCESS_FINE_LOCATION).toTypedArray()
 
 
-    fun pon(){
-
-        val customtext = view?.findViewById<TextView>(R.id.textView6)
-        customtext?.text = ""
-    }
+//    fun pon(){
+//
+//        val customtext = view?.findViewById<TextView>(R.id.textView6)
+//        customtext?.text = ""
+//    }
 
 
 

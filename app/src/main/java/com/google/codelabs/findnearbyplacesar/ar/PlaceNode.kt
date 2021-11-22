@@ -48,7 +48,7 @@ class PlaceNode(
                 //var dist = google.maps.geometry.spherical.computeLength(place.geometry);
 
                 ViewRenderable.builder()
-                        .setView(context, R.layout.arrow2)
+                        .setView(context, R.layout.arrow)
                         .build()
                         .thenAccept { renderable ->
                             setRenderable(renderable)
