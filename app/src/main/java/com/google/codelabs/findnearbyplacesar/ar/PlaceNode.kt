@@ -45,6 +45,7 @@ class PlaceNode(
         if (place != null) {
             if(place.id == "y"){
 
+                //var dist = google.maps.geometry.spherical.computeLength(place.geometry);
 
                 ViewRenderable.builder()
                         .setView(context, R.layout.arrow2)
