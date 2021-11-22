@@ -268,7 +268,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     }
 
 //                    val places = response.body()?.results ?: emptyList()
-                    val dog = Place("y", "50m先", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.70499099303314, lng=135.4999741682429)))
+                    val dog = Place("", "50m先", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.70499099303314, lng=135.4999741682429)))
                     val cat = Place("y", "20m先", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.70824269190124, lng=135.48508181571486)))
                     val con = Place("", "30m先", "コンビニ", Geometry(GeometryLocation(lat=34.7088768, lng = 135.4969214)))
                     val places = listOf(dog, cat, con);
