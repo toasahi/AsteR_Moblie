@@ -30,7 +30,7 @@ class PlaceNode(
 
     private var placeRenderable: ViewRenderable? = null
     private var textViewPlace: TextView? = null
-
+    
     override fun onActivate() {
         super.onActivate()
 
@@ -41,6 +41,7 @@ class PlaceNode(
         if (placeRenderable != null) {
             return
         }
+
 
         if(place?.id == ""){
             ViewRenderable.builder()
@@ -68,6 +69,9 @@ class PlaceNode(
                         textViewPlace?.text = it.name
                     }
                 }
+
+        }
+
 
         }
 
