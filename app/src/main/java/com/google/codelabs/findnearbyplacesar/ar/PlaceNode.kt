@@ -69,7 +69,7 @@ class PlaceNode(
                             placeRenderable = renderable
 
                             place?.let {
-                                textViewPlace = renderable.view.findViewById(R.id.placeName)
+                                textViewPlace = renderable.view.findViewById(R.id.textView2)
                                 textViewPlace?.text = it.name
                             }
                         }
