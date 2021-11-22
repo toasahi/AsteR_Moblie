@@ -268,12 +268,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                     }
 
 //                    val places = response.body()?.results ?: emptyList()
-
                     val dog = Place("school1", "", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.70656467977314, lng=135.5034910182318)));
                     val cat = Place("school2", "", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.70563171669643, lng=135.50331008773193)));
                     val arrow = Place("", "", "矢印", Geometry(GeometryLocation(lat=34.70824269190124, lng=135.48508181571486)));
                     val places = listOf(dog, cat,arrow);
-
                     Log.d("ahobaka", places.toString());
                     this@MainActivity.places = places
                 }
