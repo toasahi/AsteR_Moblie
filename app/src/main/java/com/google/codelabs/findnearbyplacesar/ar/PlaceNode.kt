@@ -42,12 +42,13 @@ class PlaceNode(
         }
 
 
-
         if (place != null) {
             if(place.id == "y"){
 
+                //var dist = google.maps.geometry.spherical.computeLength(place.geometry);
+
                 ViewRenderable.builder()
-                        .setView(context, R.layout.arrow2)
+                        .setView(context, R.layout.arrow)
                         .build()
                         .thenAccept { renderable ->
                             setRenderable(renderable)
@@ -55,7 +56,7 @@ class PlaceNode(
 
                             place?.let {
 
-                                textViewPlace = renderable.view.findViewById(R.id.textView6)
+                                textViewPlace = renderable.view.findViewById(R.id.navgation1)
                                 textViewPlace?.text = it.text
                             }
                         }
@@ -74,6 +75,9 @@ class PlaceNode(
                             }
                         }
             }
+
+        }
+
 
     }
 
