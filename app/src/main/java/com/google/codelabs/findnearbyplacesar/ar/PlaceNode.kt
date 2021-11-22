@@ -15,7 +15,6 @@
 package com.google.codelabs.findnearbyplacesar.ar
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.google.ar.sceneform.Node
@@ -42,35 +41,39 @@ class PlaceNode(
             return
         }
 
-        if(place?.id == ""){
-            ViewRenderable.builder()
-                .setView(context, R.layout.arrow)
-                .build()
-                .thenAccept { renderable ->
-                    setRenderable(renderable)
-                    placeRenderable = renderable
 
-                    place?.let {
-                        textViewPlace = renderable.view.findViewById(R.id.placeName)
-                        textViewPlace?.text = it.name
-                    }
-                }
-        }else{
-            ViewRenderable.builder()
-                .setView(context, R.layout.place_view)
-                .build()
-                .thenAccept { renderable ->
-                    setRenderable(renderable)
-                    placeRenderable = renderable
 
-                    place?.let {
-                        textViewPlace = renderable.view.findViewById(R.id.placeName)
-                        textViewPlace?.text = it.name
-                    }
-                }
+        if (place != null) {
+            if(place.id == "y"){
 
-        }
+                ViewRenderable.builder()
+                        .setView(context, R.layout.arrow2)
+                        .build()
+                        .thenAccept { renderable ->
+                            setRenderable(renderable)
+                            placeRenderable = renderable
 
+                            place?.let {
+
+                                textViewPlace = renderable.view.findViewById(R.id.textView6)
+                                textViewPlace?.text = it.text
+                            }
+                        }
+
+            }else {
+                ViewRenderable.builder()
+                        .setView(context, R.layout.place_view)
+                        .build()
+                        .thenAccept { renderable ->
+                            setRenderable(renderable)
+                            placeRenderable = renderable
+
+                            place?.let {
+                                textViewPlace = renderable.view.findViewById(R.id.textView2)
+                                textViewPlace?.text = it.name
+                            }
+                        }
+            }
 
     }
 
