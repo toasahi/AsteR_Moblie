@@ -26,6 +26,7 @@ import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -39,7 +40,13 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.ar.core.*
 import com.google.ar.sceneform.AnchorNode
+import com.google.ar.sceneform.FrameTime
+import com.google.ar.sceneform.Scene
+import com.google.ar.sceneform.math.Vector3
+import com.google.ar.sceneform.ux.ArFragment
+import com.google.ar.sceneform.ux.TransformableNode
 import com.google.codelabs.findnearbyplacesar.api.NearbyPlacesResponse
 import com.google.codelabs.findnearbyplacesar.api.PlacesService
 import com.google.codelabs.findnearbyplacesar.ar.PlaceNode
@@ -48,11 +55,12 @@ import com.google.codelabs.findnearbyplacesar.model.Geometry
 import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
 import com.google.codelabs.findnearbyplacesar.model.getPositionVector
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity(), SensorEventListener {
+class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {
 
     private val TAG = "MainActivity"
 
@@ -76,6 +84,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var currentLocation: Location? = null
     private var map: GoogleMap? = null
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!isSupportedDevice()) {
@@ -85,6 +95,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         //PlacesArFragment.ktのクラスを呼び出す
         arFragment = supportFragmentManager.findFragmentById(R.id.ar_fragment) as PlacesArFragment
+
+        arFragment.arSceneView.scene.addOnUpdateListener(this)
 
         //マップを表示するためのフラグメント
         mapFragment =
@@ -97,6 +109,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         placesService = PlacesService.create()
         //位置情報API
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
 
         setUpAr()
         setUpMaps()
@@ -130,7 +143,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 
     private fun setUpAr() {
-        //タップされた時の処理？
+
+
+
+            /*//タップされた時の処理？
         arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
             // Create anchor
             val anchor = hitResult.createAnchor()
@@ -138,7 +154,63 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             anchorNode?.setParent(arFragment.arSceneView.scene)
             addPlaces(anchorNode!!)
         }
+
+             */
     }
+
+    override fun onUpdate(frameTime: FrameTime?) {
+        //get the frame from the scene for shorthand
+        val frame = arFragment.arSceneView.arFrame as Frame
+
+
+        //get the trackables to ensure planes are detected
+        val var3 = frame.getUpdatedTrackables(Plane::class.java).iterator()
+        while(var3.hasNext()) {
+            val plane = var3.next() as Plane
+
+            //If a plane has been detected & is being tracked by ARCore
+            if (plane.trackingState == TrackingState.TRACKING) {
+
+                //Hide the plane discovery helper animation
+                arFragment.planeDiscoveryController.hide()
+
+
+                //Get all added anchors to the frame
+                val iterableAnchor = frame.updatedAnchors.iterator()
+
+                //place the first object only if no previous anchors were added
+                if(!iterableAnchor.hasNext()) {
+                    //Perform a hit test at the center of the screen to place an object without tapping
+                    val hitTest = frame.hitTest(frame.screenCenter().x, frame.screenCenter().y)
+
+                    //iterate through all hits
+                    val hitTestIterator = hitTest.iterator()
+                    while(hitTestIterator.hasNext()) {
+                        val hitResult = hitTestIterator.next()
+
+                        // Create anchor
+                        val anchor = hitResult.createAnchor()
+                        anchorNode = AnchorNode(anchor)
+                        anchorNode?.setParent(arFragment.arSceneView.scene)
+                        addPlaces(anchorNode!!)
+
+                        /*
+                        //Create an anchor at the plane hit
+                        val modelAnchor = plane.createAnchor(hitResult.hitPose)
+
+                        //Attach a node to this anchor with the scene as the parent
+                        val anchorNode = AnchorNode(modelAnchor)
+                        anchorNode.setParent(arFragment.arSceneView.scene)
+*/
+
+
+
+                    }
+                }
+            }
+        }
+    }
+
     //表示するピンの場所を取得
     private fun addPlaces(anchorNode: AnchorNode) {
         //現在地
@@ -176,6 +248,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 markers.add(marker)
             }
         }
+    }
+
+
+
+    private fun Frame.screenCenter(): Vector3 {
+        val vw = findViewById<View>(android.R.id.content)
+        return Vector3(vw.width / 2f, vw.height / 2f, 0f)
     }
 
     private fun showInfoWindow(place: Place) {
@@ -319,6 +398,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         SensorManager.getOrientation(rotationMatrix, orientationAngles)
     }
 }
+
 
 //位置の座標
 val Location.latLng: LatLng
