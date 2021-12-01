@@ -85,6 +85,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     private var map: GoogleMap? = null
 
 
+    private var firstrun = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -188,11 +190,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     while(hitTestIterator.hasNext()) {
                         val hitResult = hitTestIterator.next()
 
-                        // Create anchor
-                        val anchor = hitResult.createAnchor()
-                        anchorNode = AnchorNode(anchor)
-                        anchorNode?.setParent(arFragment.arSceneView.scene)
-                        addPlaces(anchorNode!!)
+                        if (firstrun == 0){
+                            // Create anchor
+                            val anchor = hitResult.createAnchor()
+                            anchorNode = AnchorNode(anchor)
+                            anchorNode?.setParent(arFragment.arSceneView.scene)
+                            addPlaces(anchorNode!!)
+                            firstrun = 1
+                        }
+
 
                         /*
                         //Create an anchor at the plane hit
