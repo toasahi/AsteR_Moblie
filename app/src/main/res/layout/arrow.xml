@@ -10,7 +10,7 @@
         >
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/arrowImage"
         android:gravity="left"
         android:layout_width="match_parent"
         android:layout_height="550dp"

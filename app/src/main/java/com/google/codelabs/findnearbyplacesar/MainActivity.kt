@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -82,11 +83,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     private var markers: MutableList<Marker> = emptyList<Marker>().toMutableList()
     private var places: List<Place>? = null
     private var currentLocation: Location? = null
-    private var map: GoogleMap? = null
-
+    private var map: GoogleMap? =null
 
     private var firstrun = 0
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,6 +110,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         placesService = PlacesService.create()
         //位置情報API
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+
+
+//        arImageView.run{
+//            visibility = ImageView.VISIBLE
+//            postDelayed({
+//                animate().alpha(0f).setDuration(1000).withEndAction { visibility = ImageView.GONE }
+//            }, 2000)
+//        }
 
 
         setUpAr()
