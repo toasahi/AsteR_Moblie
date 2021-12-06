@@ -44,6 +44,7 @@ import com.google.codelabs.findnearbyplacesar.api.NearbyPlacesResponse
 import com.google.codelabs.findnearbyplacesar.api.PlacesService
 import com.google.codelabs.findnearbyplacesar.ar.PlaceNode
 import com.google.codelabs.findnearbyplacesar.ar.PlacesArFragment
+import com.google.codelabs.findnearbyplacesar.distance.DistanceMeasurement
 import com.google.codelabs.findnearbyplacesar.model.Geometry
 import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
@@ -237,6 +238,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             currentLocation = location
             onSuccess(location)
+            Log.d("manuke", location.latitude.toString())
+            Log.d("manuke", location.longitude.toString())
+
         }.addOnFailureListener {
             Log.e(TAG, "Could not get location")
         }
@@ -271,11 +275,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
                     val dog = Place("y", "50m先", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.70499099303314, lng=135.4999741682429)))
                     val cat = Place("", "20m先", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.70824269190124, lng=135.48508181571486)))
-                    val con = Place("", "30m先", "コンビニ", Geometry(GeometryLocation(lat=34.7088768, lng = 135.4969214)))
-                    val places = listOf(dog, cat, con);
+                    val con = Place("y", "30m先", "コンビニ", Geometry(GeometryLocation(lat=34.7088768, lng = 135.4969214)))
+                    val nun = Place("", "50m先", "梅田モータープール", Geometry(GeometryLocation(34.7065414,135.5003213)))
+                    val places = listOf(dog, cat, con, nun)
 
-                    Log.d("ahobaka", places.toString());
+                    Log.d("ahobaka", places.toString())
                     this@MainActivity.places = places
+
+
+                    DistanceMeasurement(dog.geometry.location, location)
                 }
             }
         )
