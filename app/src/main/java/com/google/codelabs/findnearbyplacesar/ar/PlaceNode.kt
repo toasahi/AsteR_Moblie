@@ -16,6 +16,7 @@ package com.google.codelabs.findnearbyplacesar.ar
 
 import android.content.Context
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.rendering.ViewRenderable
