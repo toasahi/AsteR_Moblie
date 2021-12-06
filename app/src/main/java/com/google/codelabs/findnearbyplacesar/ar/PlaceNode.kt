@@ -49,32 +49,40 @@ class PlaceNode(
                 //var dist = google.maps.geometry.spherical.computeLength(place.geometry);
 
                 ViewRenderable.builder()
-                        .setView(context, R.layout.arrow)
-                        .build()
-                        .thenAccept { renderable ->
-                            setRenderable(renderable)
-                            placeRenderable = renderable
+                    .setView(context, R.layout.arrow)
+                    .build()
+                    .thenAccept { renderable ->
+                        setRenderable(renderable)
+                        placeRenderable = renderable
 
-                            place?.let {
+                        place?.let {
 
-                                textViewPlace = renderable.view.findViewById(R.id.navgation1)
-                                textViewPlace?.text = it.text
-                            }
+                            textViewPlace = renderable.view.findViewById(R.id.navgation1)
+                            textViewPlace?.text = it.text
                         }
+                        val test: ImageView = renderable.view.findViewById(R.id.arrowImage)
+                        test.run{
+                            visibility = View.VISIBLE
+                            postDelayed({
+                                animate().alpha(0f).setDuration(1000).withEndAction { visibility = View.GONE }
+                            },5000)
+                        }
+                    }
+
 
             }else {
                 ViewRenderable.builder()
-                        .setView(context, R.layout.place_view)
-                        .build()
-                        .thenAccept { renderable ->
-                            setRenderable(renderable)
-                            placeRenderable = renderable
+                    .setView(context, R.layout.place_view)
+                    .build()
+                    .thenAccept { renderable ->
+                        setRenderable(renderable)
+                        placeRenderable = renderable
 
-                            place?.let {
-                                textViewPlace = renderable.view.findViewById(R.id.textView2)
-                                textViewPlace?.text = it.name
-                            }
+                        place?.let {
+                            textViewPlace = renderable.view.findViewById(R.id.textView2)
+                            textViewPlace?.text = it.name
                         }
+                    }
             }
 
         }
