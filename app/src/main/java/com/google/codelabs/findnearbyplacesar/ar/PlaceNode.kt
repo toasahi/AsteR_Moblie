@@ -14,14 +14,18 @@
 
 package com.google.codelabs.findnearbyplacesar.ar
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.view.View
+import android.view.ViewPropertyAnimator
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.codelabs.findnearbyplacesar.R
 import com.google.codelabs.findnearbyplacesar.model.Place
+import kotlin.random.Random
+
 
 class PlaceNode(
     val context: Context,
@@ -60,13 +64,18 @@ class PlaceNode(
                             textViewPlace = renderable.view.findViewById(R.id.navgation1)
                             textViewPlace?.text = it.text
                         }
-                        val test: ImageView = renderable.view.findViewById(R.id.arrowImage)
-                        test.run{
-                            visibility = View.VISIBLE
-                            postDelayed({
-                                animate().alpha(0f).setDuration(1000).withEndAction { visibility = View.GONE }
-                            },5000)
-                        }
+                        val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
+//                        arrowImageView.run{
+//                            visibility = View.VISIBLE
+//                            postDelayed({
+//                                animate().alpha(0f).setDuration(1000).withEndAction { visibility = View.GONE }
+//                            },5000)
+////                            animate().translationX()
+//                        }
+                        val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 0f, 400f)
+                        objectAnimator.duration = 2000
+                        objectAnimator.repeatCount = -1
+                        objectAnimator.start()
                     }
 
 
@@ -103,5 +112,9 @@ class PlaceNode(
         }?.forEach {
             (it as PlaceNode).textViewPlace?.visibility = View.GONE
         }
+    }
+
+    private fun getTranslation(value: Int, ratio: Float): Float {
+        return value * (ratio - 1.0f) * (Random.nextFloat() - 0.5f)
     }
 }
