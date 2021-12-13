@@ -56,11 +56,14 @@ import com.google.codelabs.findnearbyplacesar.model.Geometry
 import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
 import com.google.codelabs.findnearbyplacesar.model.getPositionVector
+import com.google.codelabs.findnearbyplacesar.near.nearby
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+var latA: Double = 0.0
+var lngA: Double = 0.0
 class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {
 
     private val TAG = "MainActivity"
@@ -329,6 +332,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                 Log.e(TAG,"Could not get location (null)")
             }
             currentLocation = location
+            latA = location.latitude
+            lngA = location.longitude
             onSuccess(location)
         }.addOnFailureListener {
             Log.e(TAG, "Could not get location")
@@ -362,12 +367,24 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
 //                    val places = response.body()?.results ?: emptyList()
 //                    34.70915985471459, 135.510987349512
-                    val dog = Place("y", "", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.70499099303314, lng=135.4999741682429)))
+                    val dog = Place("y", "", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.7064324, lng=135.5010341)))
                     val cat = Place("", "20m先", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.70824269190124, lng=135.48508181571486)))
-                    val con = Place("", "30m先", "コンビニ", Geometry(GeometryLocation(lat=34.7088768, lng = 135.4969214)))
-                    val places = listOf(dog, cat, con);
+                    val con = Place("", "30m先", "デイリーヤマザキ+ＭＢＳ茶屋町店", Geometry(GeometryLocation(lat=34.7097434, lng = 135.498188)))
+                    val tenma = Place("", "", "天満駅", Geometry((GeometryLocation(lat=34.704952, lng = 135.511912))))
+                    val sakuranbo = Place("", "", "さくらんぼ", Geometry((GeometryLocation(lat=34.702811, lng = 135.502675))))
+                    val byoin = Place("", "", "日本生命病院", Geometry((GeometryLocation(lat=34.6904902, lng = 135.4919676))))
 
-                    Log.d("ahobaka", places.toString());
+//                    Log.d("manuke", "コン専:"+dog.geometry)
+//                    Log.d("manuke", "コン専:"+dog.geometry.location)
+//                    Log.d("manuke", "コン専lat:"+dog.geometry.location.lat)
+//                    Log.d("manuke", "コン専lng:"+dog.geometry.location.lng)
+
+                    //listOf->mutableListOfに変更
+                    val places = mutableListOf(dog, cat, con, tenma, sakuranbo, byoin)
+
+                    for(i in 0..places.size-1){
+                        nearby(places.get(i).geometry.location.lat, places.get(i).geometry.location.lng)
+                    }
                     this@MainActivity.places = places
                 }
             }
