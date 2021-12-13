@@ -16,7 +16,7 @@ import com.google.codelabs.findnearbyplacesar.lngA
 //
 //}
 
-fun nearby(lat: Double, lng: Double){
+fun nearby(lat: Double, lng: Double): Double {
     //A->現在位置, B->引数
     val latLngA = LatLng(latA, lngA)
     val latLngB = LatLng(lat, lng)
@@ -26,4 +26,6 @@ fun nearby(lat: Double, lng: Double){
 
     Log.d("manuke", "AB: $distance m")
     Log.d("manuke", "AB: ${distance / 1000} km")
+
+    return distance
 }
