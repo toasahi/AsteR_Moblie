@@ -16,6 +16,7 @@ package com.google.codelabs.findnearbyplacesar.ar
 
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewPropertyAnimator
 import android.widget.ImageView
@@ -24,6 +25,7 @@ import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.codelabs.findnearbyplacesar.R
 import com.google.codelabs.findnearbyplacesar.model.Place
+import com.google.codelabs.findnearbyplacesar.near.nearby
 import kotlin.random.Random
 
 
@@ -64,6 +66,7 @@ class PlaceNode(
                             textViewPlace = renderable.view.findViewById(R.id.navgation1)
                             textViewPlace?.text = it.text
                         }
+//                        nearby()
                         val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
 //                        arrowImageView.run{
 //                            visibility = View.VISIBLE
@@ -86,6 +89,7 @@ class PlaceNode(
                     .thenAccept { renderable ->
                         setRenderable(renderable)
                         placeRenderable = renderable
+
 
                         place?.let {
                             textViewPlace = renderable.view.findViewById(R.id.textView2)
