@@ -368,11 +368,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 //                    val places = response.body()?.results ?: emptyList()
 //                    34.70915985471459, 135.510987349512
                     val dog = Place("y", "", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.7064324, lng=135.5010341)))
-                    val cat = Place("", "20m先", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.70824269190124, lng=135.48508181571486)))
-                    val con = Place("", "30m先", "デイリーヤマザキ+ＭＢＳ茶屋町店", Geometry(GeometryLocation(lat=34.7097434, lng = 135.498188)))
+                    val cat = Place("", "20m先", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.70728890078992, lng=135.50340175953764)))
+                    val con = Place("", "30m先", "デイリーヤマザキ+ＭＢＳ茶屋町店", Geometry(GeometryLocation(lat=34.70864569605197, lng = 135.50030746718386)))
+                    val nakazaki = Place("", "", "中崎町駅", Geometry((GeometryLocation(lat=34.70699285647948, lng = 135.50536894969852))))
                     val tenma = Place("", "", "天満駅", Geometry((GeometryLocation(lat=34.704952, lng = 135.511912))))
-                    val sakuranbo = Place("", "", "さくらんぼ", Geometry((GeometryLocation(lat=34.702811, lng = 135.502675))))
+                    val sakuranbo = Place("", "", "さくらんぼ", Geometry((GeometryLocation(lat=34.703148349016196, lng = 135.50279249377016))))
                     val byoin = Place("", "", "日本生命病院", Geometry((GeometryLocation(lat=34.6904902, lng = 135.4919676))))
+                    val con2 = Place("", "", "ローソン北区万歳町店", Geometry((GeometryLocation(lat=34.705697314917415, lng = 135.50431596239108))))
+
 
 //                    Log.d("manuke", "コン専:"+dog.geometry)
 //                    Log.d("manuke", "コン専:"+dog.geometry.location)
@@ -380,7 +383,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 //                    Log.d("manuke", "コン専lng:"+dog.geometry.location.lng)
 
                     //listOf->mutableListOfに変更
-                    val places = mutableListOf(dog, cat, con, tenma, sakuranbo, byoin)
+                    val places = mutableListOf(dog, cat, con, nakazaki, tenma, sakuranbo, byoin, con2)
 
                     for(i in 0..places.size-1){
                         nearby(places.get(i).geometry.location.lat, places.get(i).geometry.location.lng)
