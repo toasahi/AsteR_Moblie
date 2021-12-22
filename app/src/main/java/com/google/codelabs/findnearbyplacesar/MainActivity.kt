@@ -52,6 +52,7 @@ import com.google.codelabs.findnearbyplacesar.api.NearbyPlacesResponse
 import com.google.codelabs.findnearbyplacesar.api.PlacesService
 import com.google.codelabs.findnearbyplacesar.ar.PlaceNode
 import com.google.codelabs.findnearbyplacesar.ar.PlacesArFragment
+import com.google.codelabs.findnearbyplacesar.json.ReadJson
 import com.google.codelabs.findnearbyplacesar.model.Geometry
 import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
@@ -391,7 +392,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                     //PlaceListで取得したデータを格納
                     val places = PlaceList()
-
+                    ReadJson(places.get(1).geometry.location.lat, places.get(1).geometry.location.lng)
 //                    //距離測定確認のため
 //                    for(i in 0..places.size-1){
 //                        nearby(places.get(i).geometry.location.lat, places.get(i).geometry.location.lng)

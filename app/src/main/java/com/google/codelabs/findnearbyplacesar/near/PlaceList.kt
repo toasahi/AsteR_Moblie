@@ -34,6 +34,7 @@ fun PlaceList(): MutableList<Place> {
         // 距離をメートル単位で返す
         val distance = SphericalUtil.computeDistanceBetween(latLngA, latLngB)
 
+        //この場合300m圏内を表示
         if(distance < 300){
             placeList.add(places[i])
         }
