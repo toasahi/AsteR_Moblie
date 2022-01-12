@@ -64,6 +64,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+//現在地の緯度経度
 var latA: Double = 0.0
 var lngA: Double = 0.0
 class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {

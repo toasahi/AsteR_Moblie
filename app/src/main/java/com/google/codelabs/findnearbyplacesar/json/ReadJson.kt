@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.codelabs.findnearbyplacesar.latA
 import com.google.codelabs.findnearbyplacesar.lngA
+import com.google.codelabs.findnearbyplacesar.model.Geometry
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -12,13 +13,22 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 
-fun ReadJson(lat: Double, lng: Double) {
+//引数：一番近い目的地, 戻り値はPairクラスを使用
+fun ReadJson(lat: Double, lng: Double): Pair<MutableList<String>, MutableList<String>> {
     val API_KEY = "AIzaSyCFtXqvRHj9BH7iHBJToobJO8oU6S293Sc"
     val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
             latA + "," + lngA + "&destination=" +
             lat + "," + lng + "&key=" + API_KEY + "&mode=walking"
+
+    //API_URLをネットで検索ー＞データ確認可能
+    Log.d("url", "$API_KEY")
+
     var url = URL(API_URL)
     var br: BufferedReader
+
+    //経路を格納するリスト
+    var RouteLatList: MutableList<String> = ArrayList()
+    var RouteLngList: MutableList<String> = ArrayList()
 
     //非同期処理
     GlobalScope.launch {
@@ -30,15 +40,25 @@ fun ReadJson(lat: Double, lng: Double) {
             Log.d("json", "json：" + str)
 
             try {
+                //routes/legs/steps
                 val jsonObject = JSONObject(str)
                 val jsonArray = jsonObject.getJSONArray("routes")
                 val jsonArray2 = jsonArray.getJSONObject(0).getJSONArray("legs")
-                Log.d("json2", "jsonArray2：" + jsonArray2.toString())
-//                val jsonArray3 = jsonArray2.getJSONObject(0).getJSONArray("step")
-                for (i in 0 until jsonArray2.length()) {
-                    val jsonData = jsonArray2.getJSONObject(i)
-                    val jsonData2 = jsonData.getString("legs")
-                    Log.d("json2", "jsonData："+"$i : ${jsonData.getString("steps")}")
+                val jsonArray3 = jsonArray2.getJSONObject(0).getJSONArray("steps")
+
+                //for文で経路の緯度経度を格納
+                for (i in 0 until jsonArray3.length()) {
+
+                    val jsonData = jsonArray3.getJSONObject(i).getJSONObject("end_location")
+                    val latData = jsonData.getString("lat")
+                    val lngData = jsonData.getString("lng")
+
+                    RouteLatList.add(latData)
+                    RouteLngList.add(lngData)
+
+                    Log.d("jsondata", "lat:" + latData.toString())
+                    Log.d("jsondata", "lng:" + lngData.toString())
+
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
@@ -48,6 +68,6 @@ fun ReadJson(lat: Double, lng: Double) {
         println("待ったよ!")
     }
 
-//    //json形式のデータとして識別
-//    var json = JSONObject(br)
+    //経路の緯度経度リストを返す
+    return RouteLatList to RouteLngList
 }
