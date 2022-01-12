@@ -393,7 +393,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                     //PlaceListで取得したデータを格納
                     val places = PlaceList()
-                    ReadJson(places.get(1).geometry.location.lat, places.get(1).geometry.location.lng)
+                    ReadJson(places.get(1).geometry.location.lat, places.get(1).geometry.location.lng,this@MainActivity)
 //                    //距離測定確認のため
 //                    for(i in 0..places.size-1){
 //                        nearby(places.get(i).geometry.location.lat, places.get(i).geometry.location.lng)

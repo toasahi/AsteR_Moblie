@@ -1,7 +1,9 @@
 package com.google.codelabs.findnearbyplacesar.json
 
+import android.content.Context
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
+import com.google.codelabs.findnearbyplacesar.R
 import com.google.codelabs.findnearbyplacesar.latA
 import com.google.codelabs.findnearbyplacesar.lngA
 import com.google.codelabs.findnearbyplacesar.model.Geometry
@@ -14,14 +16,15 @@ import java.io.InputStreamReader
 import java.net.URL
 
 //引数：一番近い目的地, 戻り値はPairクラスを使用
-fun ReadJson(lat: Double, lng: Double): Pair<MutableList<String>, MutableList<String>> {
-    val API_KEY = "AIzaSyCFtXqvRHj9BH7iHBJToobJO8oU6S293Sc"
+fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, MutableList<String>> {
+
+    val API_KEY = api.getString(R.string.API_KEY)
     val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
             latA + "," + lngA + "&destination=" +
             lat + "," + lng + "&key=" + API_KEY + "&mode=walking"
 
     //API_URLをネットで検索ー＞データ確認可能
-    Log.d("url", "$API_KEY")
+    Log.d("url", "$API_URL")
 
     var url = URL(API_URL)
     var br: BufferedReader
