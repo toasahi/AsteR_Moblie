@@ -8,7 +8,9 @@ import com.google.codelabs.findnearbyplacesar.latA
 import com.google.codelabs.findnearbyplacesar.lngA
 import com.google.codelabs.findnearbyplacesar.model.Geometry
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -33,44 +35,86 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
     var RouteLatList: MutableList<String> = ArrayList()
     var RouteLngList: MutableList<String> = ArrayList()
 
+
     //非同期処理
+    println("あ～あ、ちょっと待ってよぉ～")
     GlobalScope.launch {
-        val job = launch {
-            println("あ〜あ、ちょっと待ってよぉ〜")
-            //APIから情報を取得する.
-            br = BufferedReader(InputStreamReader(url.openStream()))
-            val str: String = br.readText() //データ
-            Log.d("json", "json：" + str)
+        println("あ〜あ、ちょっと待ってよぉ〜")
+        //APIから情報を取得する.
+        br = BufferedReader(InputStreamReader(url.openStream()))
+        val str: String = br.readText() //データ
+        Log.d("json", "json：" + str)
 
-            try {
-                //routes/legs/steps
-                val jsonObject = JSONObject(str)
-                val jsonArray = jsonObject.getJSONArray("routes")
-                val jsonArray2 = jsonArray.getJSONObject(0).getJSONArray("legs")
-                val jsonArray3 = jsonArray2.getJSONObject(0).getJSONArray("steps")
+        try {
+            //routes/legs/steps
+            val jsonObject = JSONObject(str)
+            val jsonArray = jsonObject.getJSONArray("routes")
+            val jsonArray2 = jsonArray.getJSONObject(0).getJSONArray("legs")
+            val jsonArray3 = jsonArray2.getJSONObject(0).getJSONArray("steps")
 
-                //for文で経路の緯度経度を格納
-                for (i in 0 until jsonArray3.length()) {
+            //for文で経路の緯度経度を格納
+            for (i in 0 until jsonArray3.length()) {
 
-                    val jsonData = jsonArray3.getJSONObject(i).getJSONObject("end_location")
-                    val latData = jsonData.getString("lat")
-                    val lngData = jsonData.getString("lng")
+                val jsonData = jsonArray3.getJSONObject(i).getJSONObject("end_location")
+                val latData = jsonData.getString("lat")
+                val lngData = jsonData.getString("lng")
 
-                    RouteLatList.add(latData)
-                    RouteLngList.add(lngData)
+                RouteLatList.add(latData)
+                RouteLngList.add(lngData)
 
-                    Log.d("jsondata", "lat:" + latData.toString())
-                    Log.d("jsondata", "lng:" + lngData.toString())
+                Log.d("jsondata", "lat:" + latData)
+                Log.d("jsondata", "lng:" + lngData.toString())
+                Log.d("tane", "List:" + RouteLatList)
 
-                }
-            } catch (e: JSONException) {
-                e.printStackTrace()
             }
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
-        job.join()
-        println("待ったよ!")
     }
+    Thread.sleep(3000)
 
-    //経路の緯度経度リストを返す
-    return RouteLatList to RouteLngList
+
+//    GlobalScope.launch {
+//        val job = launch {
+//            println("あ〜あ、ちょっと待ってよぉ〜")
+//            //APIから情報を取得する.
+//            br = BufferedReader(InputStreamReader(url.openStream()))
+//            val str: String = br.readText() //データ
+//            Log.d("json", "json：" + str)
+//
+//            try {
+//                //routes/legs/steps
+//                val jsonObject = JSONObject(str)
+//                val jsonArray = jsonObject.getJSONArray("routes")
+//                val jsonArray2 = jsonArray.getJSONObject(0).getJSONArray("legs")
+//                val jsonArray3 = jsonArray2.getJSONObject(0).getJSONArray("steps")
+//
+//                //for文で経路の緯度経度を格納
+//                for (i in 0 until jsonArray3.length()) {
+//
+//                    val jsonData = jsonArray3.getJSONObject(i).getJSONObject("end_location")
+//                    val latData = jsonData.getString("lat")
+//                    val lngData = jsonData.getString("lng")
+//
+//                    RouteLatList.add(latData)
+//                    RouteLngList.add(lngData)
+//
+//                    Log.d("jsondata", "lat:" + latData)
+//                    Log.d("jsondata", "lng:" + lngData.toString())
+//                    Log.d("tane", "List:" + RouteLatList)
+//
+//                }
+//            } catch (e: JSONException) {
+//                e.printStackTrace()
+//            }
+//        }
+//        job.join()
+//        println("待ったよ!")
+//        Log.d("tane", "List:" + RouteLatList)
+//    }
+
+        Log.d("tane", "List:soto" + RouteLatList)
+        //経路の緯度経度リストを返す
+        return RouteLatList to RouteLngList
+
 }

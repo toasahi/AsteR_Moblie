@@ -58,6 +58,7 @@ import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
 import com.google.codelabs.findnearbyplacesar.model.getPositionVector
 import com.google.codelabs.findnearbyplacesar.near.PlaceList
+import com.google.codelabs.findnearbyplacesar.near.RouteAr
 import com.google.codelabs.findnearbyplacesar.near.nearby
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
@@ -392,8 +393,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 //                    val places = mutableListOf(dog, cat, con, nakazaki, tenma, sakuranbo, byoin, con2)
 
                     //PlaceListで取得したデータを格納
-                    val places = PlaceList()
-                    ReadJson(places.get(1).geometry.location.lat, places.get(1).geometry.location.lng,this@MainActivity)
+                    val places: MutableList<Place>
+                    places = PlaceList()
+                    val Json = ReadJson(places.get(0).geometry.location.lat, places.get(0).geometry.location.lng,this@MainActivity)
+                    val Jsonlat = Json.first
+                    val Jsonlng = Json.second
+                    Log.d("tane", "main:"+Json.toString())
+                    val Route = RouteAr(Jsonlat, Jsonlng)
+                    places.addAll(Route)
+                    Log.d("tanetone", places.toString())
+
 //                    //距離測定確認のため
 //                    for(i in 0..places.size-1){
 //                        nearby(places.get(i).geometry.location.lat, places.get(i).geometry.location.lng)
