@@ -400,7 +400,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     val Jsonlng = Json.second
                     Log.d("tane", "main:"+Json.toString())
                     val Route = RouteAr(Jsonlat, Jsonlng)
-                    places.addAll(Route)
+                    val Route1 = Route[0]
+                    places.add(Route1)
                     Log.d("tanetone", places.toString())
 
 //                    //距離測定確認のため
