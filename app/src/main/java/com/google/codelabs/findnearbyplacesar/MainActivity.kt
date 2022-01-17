@@ -67,6 +67,9 @@ import retrofit2.Response
 //現在地の緯度経度
 var latA: Double = 0.0
 var lngA: Double = 0.0
+
+var current_lat: Double = 0.0
+var current_lng: Double = 0.0
 class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {
 
     private val TAG = "MainActivity"
@@ -162,7 +165,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
 
 
-            /*//タップされた時の処理？
+            //タップされた時の処理？
         arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
             // Create anchor
             val anchor = hitResult.createAnchor()
@@ -171,7 +174,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             addPlaces(anchorNode!!)
         }
 
-             */
+
     }
 
     override fun onUpdate(frameTime: FrameTime?) {
@@ -196,6 +199,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                 //place the first object only if no previous anchors were added
                 if(!iterableAnchor.hasNext()) {
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                        if (location == null){
+                            Log.e(TAG,"Could not get location (null)")
+                        }
+                        currentLocation = location
+                        current_lat = location.latitude
+                        current_lng = location.longitude
+                    }.addOnFailureListener {
+                        Log.e(TAG, "Could not get location")
+                    }
+                    val distance = nearby(34.70694184616669, 135.50422605864563)
+                    Log.d("distance","$distance")
                     //Perform a hit test at the center of the screen to place an object without tapping
                     val hitTest = frame.hitTest(frame.screenCenter().x, frame.screenCenter().y)
 

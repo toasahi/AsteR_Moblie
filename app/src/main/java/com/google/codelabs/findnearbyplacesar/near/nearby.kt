@@ -4,6 +4,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 
 import android.util.Log
+import com.google.codelabs.findnearbyplacesar.current_lat
+import com.google.codelabs.findnearbyplacesar.current_lng
 import com.google.codelabs.findnearbyplacesar.latA
 import com.google.codelabs.findnearbyplacesar.lngA
 
@@ -18,8 +20,10 @@ import com.google.codelabs.findnearbyplacesar.lngA
 
 fun nearby(lat: Double, lng: Double): Double {
     //A->現在位置, B->引数
-    val latLngA = LatLng(latA, lngA)
+    val latLngA = LatLng(current_lat, current_lng)
     val latLngB = LatLng(lat, lng)
+
+    Log.d("latLngA","lat:$latA lngA:$lngA")
 
     // 距離をメートル単位で返す
     val distance = SphericalUtil.computeDistanceBetween(latLngA, latLngB)
