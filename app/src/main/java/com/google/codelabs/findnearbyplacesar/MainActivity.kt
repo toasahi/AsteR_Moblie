@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -70,6 +71,10 @@ var latA: Double = 0.0
 var lngA: Double = 0.0
 var current_lat: Double = 0.0
 var current_lng: Double = 0.0
+
+var anchor_list: MutableList<Anchor> = arrayListOf()
+var node_list: MutableList<PlaceNode> = arrayListOf()
+var i = 0
 class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {
 
     private val TAG = "MainActivity"
@@ -102,6 +107,18 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             return
         }
         setContentView(R.layout.activity_main)
+
+        val testBt = findViewById<Button>(R.id.testButton)
+        testBt.setOnClickListener {
+            /*
+            val wkAnchor = anchor_list.get(i)
+            wkAnchor.detach()
+             */
+
+            val wkNode = node_list.get(i)
+            anchorNode!!.removeChild(wkNode)
+            i++
+        }
 
         //PlacesArFragment.ktのクラスを呼び出す
         arFragment = supportFragmentManager.findFragmentById(R.id.ar_fragment) as PlacesArFragment
@@ -220,6 +237,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                         if (firstrun == 0){
                             // Create anchor
                             val anchor = hitResult.createAnchor()
+                            anchor_list.add(anchor)
                             anchorNode = AnchorNode(anchor)
                             anchorNode?.setParent(arFragment.arSceneView.scene)
                             addPlaces(anchorNode!!)
@@ -264,11 +282,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         for (place in places) {
             // ARに場所を追加
             val placeNode = PlaceNode(this, place)
+
             placeNode.setParent(anchorNode)
             placeNode.localPosition = place.getPositionVector(orientationAngles[0], currentLocation.latLng)
             placeNode.setOnTapListener { _, _ ->
                 showInfoWindow(place)
             }
+
+            node_list.add(placeNode)
+
+//            placeNode.removeChild()
 
             //マップにピンを配置する
             map?.let {
@@ -412,8 +435,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     val Jsonlng = Json.second
                     Log.d("tane", "main:"+Json.toString())
                     val Route = RouteAr(Jsonlat, Jsonlng)
-                    val Route1 = Route[0]
-                    places.add(Route1)
+//                    val Route1 = Route[0]
+//                    places.add(Route1)
+                    places.addAll(Route)
                     Log.d("tanetone", places.toString())
 
 //                    //距離測定確認のため
