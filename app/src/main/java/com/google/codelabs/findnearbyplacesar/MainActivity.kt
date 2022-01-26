@@ -61,6 +61,7 @@ import com.google.codelabs.findnearbyplacesar.model.getPositionVector
 import com.google.codelabs.findnearbyplacesar.near.PlaceList
 import com.google.codelabs.findnearbyplacesar.near.RouteAr
 import com.google.codelabs.findnearbyplacesar.near.nearby
+import com.google.codelabs.findnearbyplacesar.near.nearby2
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,8 +74,18 @@ var current_lat: Double = 0.0
 var current_lng: Double = 0.0
 
 var anchor_list: MutableList<Anchor> = arrayListOf()
+//要素のノードを代入する
 var node_list: MutableList<PlaceNode> = arrayListOf()
 var i = 0
+var load_count = 0
+//曲がり角を入れる変数
+var Route:MutableList<Place> = arrayListOf()
+//ルートを進めるindex
+var route_count = 0
+//ゴールを入れる
+var goal:Place = Place("", "", "ローソン北区万歳町店", Geometry((GeometryLocation(lat=34.705697314917415, lng = 135.50431596239108))))
+var delete_goal_count = 0
+
 class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {
 
     private val TAG = "MainActivity"
@@ -95,9 +106,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
     private var anchorNode: AnchorNode? = null
     private var markers: MutableList<Marker> = emptyList<Marker>().toMutableList()
-    private var places: List<Place>? = null
+    private var places: MutableList<Place>? = null
     private var currentLocation: Location? = null
-    private var map: GoogleMap? =null
+    private var map: GoogleMap? = null
 
     private var firstrun = 0
 
@@ -108,6 +119,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         }
         setContentView(R.layout.activity_main)
 
+
+        //ボタンを押すことで要素を削除
         val testBt = findViewById<Button>(R.id.testButton)
         testBt.setOnClickListener {
             /*
@@ -226,6 +239,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     }.addOnFailureListener {
                         Log.e(TAG, "Could not get location")
                     }
+
                     //Perform a hit test at the center of the screen to place an object without tapping
                     val hitTest = frame.hitTest(frame.screenCenter().x, frame.screenCenter().y)
 
@@ -233,6 +247,52 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     val hitTestIterator = hitTest.iterator()
                     while(hitTestIterator.hasNext()) {
                         val hitResult = hitTestIterator.next()
+
+                        var distance = nearby2(places!![route_count].geometry.location.lat,places!![route_count].geometry.location.lng)
+                        Log.d("distance","$distance,i=$i")
+                        Log.d("near_distance","$places")
+//
+//                        if(distance < 180 && i != 1){
+////                            if(node_list.size != 0){
+//                                val wkNode = node_list[i]
+//                                anchorNode!!.removeChild(wkNode)
+//                                i++
+//                                places!!.add(Route[route_count])
+//                                route_count += 1
+////                                firstrun = 0
+////                            }else{
+////                                firstrun = 1
+////                            }
+//                        }
+                        Log.d("route_count","$route_count")
+
+//                        if(distance < 180){
+////                            if(node_list.size != 0){
+//                            val wkNode = node_list[i]
+//                            anchorNode!!.removeChild(wkNode)
+//                            i++
+//                            places!!.add(Route[route_count])
+//                            route_count += 1
+//                            firstrun = 0
+//                            }else{
+//                                firstrun = 1
+//                            }
+//                        }
+
+                        if(distance < 7){
+//                            if(node_list.size != 0) {
+                                val wkNode = node_list[i]
+                                anchorNode!!.removeChild(wkNode)
+                                i++
+                                places!!.add(Route[route_count])
+                                route_count += 1
+//                                firstrun = 0
+//                            }else{
+//                                firstrun = 1
+//                            }
+                        }
+
+                        Log.d("routeList","$Route")
 
                         if (firstrun == 0){
                             // Create anchor
@@ -278,6 +338,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             return
         }
 
+        goal = places[0]
+
         //場所を順番に取得する
         for (place in places) {
             // ARに場所を追加
@@ -304,6 +366,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                 markers.add(marker)
             }
         }
+        if(delete_goal_count == 0){
+//            this@MainActivity.places?.removeAt(0)
+            Log.d("goal","$goal")
+            delete_goal_count += 1
+        }
+
+        Log.d("delete_count","$places");
     }
 
 
@@ -329,6 +398,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             return@firstOrNull placeTag == place
         }
         matchingMarker?.showInfoWindow()
+
     }
 
 //    override fun onOptionsItemSelected(place: Place): Boolean {
@@ -404,46 +474,23 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                         return
                     }
 
-//                    val places = response.body()?.results ?: emptyList()
-//                    34.70915985471459, 135.510987349512
-
-                    //PlaceListで追加してるため一旦コメントアウト
-//                    val dog = Place("y", "", "ECCコンピュータ専門学校", Geometry(GeometryLocation(lat=34.7064324, lng=135.5010341)))
-//                    val cat = Place("", "20m先", "ECCアーティスト専門学校", Geometry(GeometryLocation(lat=34.70728890078992, lng=135.50340175953764)))
-//                    val con = Place("", "30m先", "デイリーヤマザキ+ＭＢＳ茶屋町店", Geometry(GeometryLocation(lat=34.70864569605197, lng = 135.50030746718386)))
-//                    val nakazaki = Place("", "", "中崎町駅", Geometry((GeometryLocation(lat=34.70699285647948, lng = 135.50536894969852))))
-//                    val tenma = Place("", "", "天満駅", Geometry((GeometryLocation(lat=34.704952, lng = 135.511912))))
-//                    val sakuranbo = Place("", "", "さくらんぼ", Geometry((GeometryLocation(lat=34.703148349016196, lng = 135.50279249377016))))
-//                    val byoin = Place("", "", "日本生命病院", Geometry((GeometryLocation(lat=34.6904902, lng = 135.4919676))))
-//                    val con2 = Place("", "", "ローソン北区万歳町店", Geometry((GeometryLocation(lat=34.705697314917415, lng = 135.50431596239108))))
-
-
-//                    Log.d("manuke", "コン専:"+dog.geometry)
-//                    Log.d("manuke", "コン専:"+dog.geometry.location)
-//                    Log.d("manuke", "コン専lat:"+dog.geometry.location.lat)
-//                    Log.d("manuke", "コン専lng:"+dog.geometry.location.lng)
-
-                    //listOf->mutableListOfに変更
-                    //PlaceListで追加してるため一旦コメントアウト
-//                    val places = mutableListOf(dog, cat, con, nakazaki, tenma, sakuranbo, byoin, con2)
-
                     //PlaceListで取得したデータを格納
                     val places: MutableList<Place>
                     places = PlaceList()
+                    //一番近い目的地までのルートを取得(lat, lng)
                     val Json = ReadJson(places.get(0).geometry.location.lat, places.get(0).geometry.location.lng,this@MainActivity)
                     val Jsonlat = Json.first
                     val Jsonlng = Json.second
                     Log.d("tane", "main:"+Json.toString())
-                    val Route = RouteAr(Jsonlat, Jsonlng)
-//                    val Route1 = Route[0]
-//                    places.add(Route1)
-                    places.addAll(Route)
+                    Route = RouteAr(Jsonlat, Jsonlng)
+                    val Route1 = Route[route_count]
+                    places.add(Route1)
+                    //ルートのカウントを進める
+                    route_count += 1
+//                    i += 1
+//                    places.addAll(Route)
                     Log.d("tanetone", places.toString())
 
-//                    //距離測定確認のため
-//                    for(i in 0..places.size-1){
-//                        nearby(places.get(i).geometry.location.lat, places.get(i).geometry.location.lng)
-//                    }
                     this@MainActivity.places = places
                 }
             }
