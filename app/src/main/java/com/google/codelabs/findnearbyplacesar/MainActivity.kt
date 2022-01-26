@@ -195,16 +195,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
 
 
-            /*//タップされた時の処理？
-        arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
-            // Create anchor
-            val anchor = hitResult.createAnchor()
-            anchorNode = AnchorNode(anchor)
-            anchorNode?.setParent(arFragment.arSceneView.scene)
-            addPlaces(anchorNode!!)
-        }
+        /*//タップされた時の処理？
+    arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
+        // Create anchor
+        val anchor = hitResult.createAnchor()
+        anchorNode = AnchorNode(anchor)
+        anchorNode?.setParent(arFragment.arSceneView.scene)
+        addPlaces(anchorNode!!)
+    }
 
-             */
+         */
     }
 
     override fun onUpdate(frameTime: FrameTime?) {
@@ -248,7 +248,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     while(hitTestIterator.hasNext()) {
                         val hitResult = hitTestIterator.next()
 
-                        var distance = nearby2(places!![route_count].geometry.location.lat,places!![route_count].geometry.location.lng)
+                        var distance = nearby2(places!![1].geometry.location.lat,places!![1].geometry.location.lng)
                         Log.d("distance","$distance,i=$i")
                         Log.d("near_distance","$places")
 //
@@ -281,18 +281,42 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                         if(distance < 7){
 //                            if(node_list.size != 0) {
-                                val wkNode = node_list[i]
-                                anchorNode!!.removeChild(wkNode)
-                                i++
-                                places!!.add(Route[route_count])
-                                route_count += 1
+                            anchorNode!!.removeChild(node_list[1])
+
+                            markers[markers.size - 1].isVisible = false
+
+                            i++
+                            places!!.removeAt(1)
+                            places!!.add(Route[route_count])
+                            //マップにピンを配置する
+                            map?.let {
+                                val marker = it.addMarker(
+                                    MarkerOptions()
+                                        .position(places!![1].geometry.location.latLng)
+                                        .title(places!![1].name)
+                                )
+                                marker.tag = places!![1]
+                                markers.add(marker)
+                            }
+                            val placeNode = PlaceNode(this, places!![1])
+
+                            placeNode.setParent(anchorNode)
+                            placeNode.localPosition =
+                                currentLocation?.latLng?.let { places!![1].getPositionVector(orientationAngles[0], it) }
+                            placeNode.setOnTapListener { _, _ ->
+                                showInfoWindow(places!![1])
+                            }
+                            node_list.removeAt(1)
+                            node_list.add(placeNode)
+
+                            route_count ++
 //                                firstrun = 0
 //                            }else{
 //                                firstrun = 1
 //                            }
                         }
 
-                        Log.d("routeList","$Route")
+                        //Log.d("routeList","$Route")
 
                         if (firstrun == 0){
                             // Create anchor
@@ -339,6 +363,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         }
 
         goal = places[0]
+
+
 
         //場所を順番に取得する
         for (place in places) {
