@@ -34,8 +34,10 @@ fun nearby2(lat: Double, lng: Double): Double {
 
 fun nearby(lat: Double, lng: Double): Double {
     //A->現在位置, B->引数
-    val latLngA = LatLng(latA, lngA)
+    val latLngA = LatLng(current_lat, current_lng)
     val latLngB = LatLng(lat, lng)
+
+    Log.d("latLngA","lat:$latA lngA:$lngA")
 
     // 距離をメートル単位で返す
     val distance = SphericalUtil.computeDistanceBetween(latLngA, latLngB)
