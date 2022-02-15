@@ -298,7 +298,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                                 marker.tag = places!![1]
                                 markers.add(marker)
                             }
-                            val placeNode = PlaceNode(this, places!![1])
+                            val placeNode = PlaceNode(this, places!![1],"右")
 
                             placeNode.setParent(anchorNode)
                             placeNode.localPosition =
@@ -364,12 +364,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
         goal = places[0]
 
-
-
         //場所を順番に取得する
         for (place in places) {
             // ARに場所を追加
-            val placeNode = PlaceNode(this, place)
+            val placeNode = PlaceNode(this, place,"右")
 
             placeNode.setParent(anchorNode)
             placeNode.localPosition = place.getPositionVector(orientationAngles[0], currentLocation.latLng)

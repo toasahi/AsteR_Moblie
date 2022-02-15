@@ -31,11 +31,13 @@ import kotlin.random.Random
 
 class PlaceNode(
     val context: Context,
-    val place: Place?
+    val place: Place?,
+    val corner: String
 ) : Node() {
 
     private var placeRenderable: ViewRenderable? = null
     private var textViewPlace: TextView? = null
+    private var imageViewArrow: ImageView? = null
 
     override fun onActivate() {
         super.onActivate()
@@ -47,7 +49,6 @@ class PlaceNode(
         if (placeRenderable != null) {
             return
         }
-
 
         if (place != null) {
             if(place.id == "y"){
@@ -65,6 +66,13 @@ class PlaceNode(
 
                             textViewPlace = renderable.view.findViewById(R.id.navgation1)
                             textViewPlace?.text = it.text
+                            imageViewArrow = renderable.view.findViewById(R.id.arrowImage)
+
+                            if(Regex(corner).containsMatchIn("左")){
+                                imageViewArrow?.setImageResource(R.drawable.arrow_left)
+                            }else{
+                                imageViewArrow?.setImageResource(R.drawable.allow_right)
+                            }
                         }
 //                        nearby()
                         val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
