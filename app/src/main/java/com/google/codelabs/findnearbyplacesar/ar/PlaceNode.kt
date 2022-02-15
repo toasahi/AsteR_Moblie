@@ -69,7 +69,7 @@ class PlaceNode(
                             textViewPlace = renderable.view.findViewById(R.id.navgation1)
                             textViewPlace?.text = it.text
                             imageViewArrow = renderable.view.findViewById(R.id.arrowImage)
-
+                            Log.d("corner", cornerArray[c_count])
                             if(Regex(cornerArray[c_count]).containsMatchIn("左")){
                                 imageViewArrow?.setImageResource(R.drawable.arrow_left)
                             }else{
