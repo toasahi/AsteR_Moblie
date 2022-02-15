@@ -70,14 +70,23 @@ class PlaceNode(
                             textViewPlace?.text = it.text
                             imageViewArrow = renderable.view.findViewById(R.id.arrowImage)
                             Log.d("corner", cornerArray[c_count])
+                            val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
                             if(Regex(cornerArray[c_count]).containsMatchIn("左")){
                                 imageViewArrow?.setImageResource(R.drawable.arrow_left)
+                                val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 400f, 0f)
+                                objectAnimator.duration = 2000
+                                objectAnimator.repeatCount = -1
+                                objectAnimator.start()
                             }else{
                                 imageViewArrow?.setImageResource(R.drawable.allow_right)
+                                val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 0f, 400f)
+                                objectAnimator.duration = 2000
+                                objectAnimator.repeatCount = -1
+                                objectAnimator.start()
                             }
                         }
 //                        nearby()
-                        val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
+//                        val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
 //                        arrowImageView.run{
 //                            visibility = View.VISIBLE
 //                            postDelayed({
@@ -85,10 +94,10 @@ class PlaceNode(
 //                            },5000)
 ////                            animate().translationX()
 //                        }
-                        val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 0f, 400f)
-                        objectAnimator.duration = 2000
-                        objectAnimator.repeatCount = -1
-                        objectAnimator.start()
+//                        val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 0f, 400f)
+//                        objectAnimator.duration = 2000
+//                        objectAnimator.repeatCount = -1
+//                        objectAnimator.start()
                     }
 
 
