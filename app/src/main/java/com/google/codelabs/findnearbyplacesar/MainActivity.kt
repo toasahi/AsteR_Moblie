@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
 
         //ボタンを押すことで要素を削除
-        val testBt = findViewById<Button>(R.id.testButton)
+        /*val testBt = findViewById<Button>(R.id.testButton)
         testBt.setOnClickListener {
             /*
             val wkAnchor = anchor_list.get(i)
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             val wkNode = node_list.get(i)
             anchorNode!!.removeChild(wkNode)
             i++
-        }
+        }*/
 
         //PlacesArFragment.ktのクラスを呼び出す
         arFragment = supportFragmentManager.findFragmentById(R.id.ar_fragment) as PlacesArFragment
