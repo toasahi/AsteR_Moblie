@@ -79,12 +79,17 @@ var node_list: MutableList<PlaceNode> = arrayListOf()
 var i = 0
 var load_count = 0
 //曲がり角を入れる変数
-var Route:MutableList<Place> = arrayListOf()
+var Route: MutableList<Place> = arrayListOf()
+//曲がり角の右折・左折データ
+var cornerArray: MutableList<String> = arrayListOf()
+var c_count = 0
+
 //ルートを進めるindex
 var route_count = 0
 //ゴールを入れる
 var goal:Place = Place("", "", "ローソン北区万歳町店", Geometry((GeometryLocation(lat=34.705697314917415, lng = 135.50431596239108))))
 var delete_goal_count = 0
+
 
 class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {
 
@@ -310,6 +315,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                             node_list.add(placeNode)
 
                             route_count ++
+                            c_count++
 //                                firstrun = 0
 //                            }else{
 //                                firstrun = 1

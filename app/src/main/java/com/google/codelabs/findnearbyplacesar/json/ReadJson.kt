@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.codelabs.findnearbyplacesar.R
+import com.google.codelabs.findnearbyplacesar.cornerArray
 import com.google.codelabs.findnearbyplacesar.latA
 import com.google.codelabs.findnearbyplacesar.lngA
 import com.google.codelabs.findnearbyplacesar.model.Geometry
@@ -58,6 +59,20 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
                 val jsonData = jsonArray3.getJSONObject(i).getJSONObject("end_location")
                 val latData = jsonData.getString("lat")
                 val lngData = jsonData.getString("lng")
+
+                //0番目にはmaneuverの情報がないため
+                if(i != 0){
+
+                    val maneuver = jsonArray3.getJSONObject(i).getString("maneuver")
+                    //rightが含まれていたら
+                    if(maneuver.endsWith("right")){
+                        cornerArray.add("右")
+                    //left
+                    }else{
+                        cornerArray.add("左")
+                    }
+                    Log.d("maneuverD", "maneuver" + i + "回目" + maneuver)
+                }
 
                 RouteLatList.add(latData)
                 RouteLngList.add(lngData)

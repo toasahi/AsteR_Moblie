@@ -24,6 +24,8 @@ import android.widget.TextView
 import com.google.ar.sceneform.Node
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.codelabs.findnearbyplacesar.R
+import com.google.codelabs.findnearbyplacesar.c_count
+import com.google.codelabs.findnearbyplacesar.cornerArray
 import com.google.codelabs.findnearbyplacesar.model.Place
 import com.google.codelabs.findnearbyplacesar.near.nearby
 import kotlin.random.Random
@@ -68,7 +70,7 @@ class PlaceNode(
                             textViewPlace?.text = it.text
                             imageViewArrow = renderable.view.findViewById(R.id.arrowImage)
 
-                            if(Regex(corner).containsMatchIn("左")){
+                            if(Regex(cornerArray[c_count]).containsMatchIn("左")){
                                 imageViewArrow?.setImageResource(R.drawable.arrow_left)
                             }else{
                                 imageViewArrow?.setImageResource(R.drawable.allow_right)
