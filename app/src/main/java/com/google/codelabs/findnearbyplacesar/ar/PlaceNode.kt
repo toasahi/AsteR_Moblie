@@ -18,7 +18,6 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.view.ViewPropertyAnimator
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.ar.sceneform.Node
@@ -27,7 +26,6 @@ import com.google.codelabs.findnearbyplacesar.R
 import com.google.codelabs.findnearbyplacesar.c_count
 import com.google.codelabs.findnearbyplacesar.cornerArray
 import com.google.codelabs.findnearbyplacesar.model.Place
-import com.google.codelabs.findnearbyplacesar.near.nearby
 import kotlin.random.Random
 
 
@@ -57,14 +55,21 @@ class PlaceNode(
 
                 //var dist = google.maps.geometry.spherical.computeLength(place.geometry);
 
+
+
+
                 ViewRenderable.builder()
-                    .setView(context, R.layout.arrow)
+                    .setSource(
+                        context,
+                        R.raw.allow)
                     .build()
                     .thenAccept { renderable ->
                         setRenderable(renderable)
                         placeRenderable = renderable
 
                         place?.let {
+
+                            val arFragment = getSupportFragmentManager().findFragmentById(R.id.ar_fragment)
 
                             textViewPlace = renderable.view.findViewById(R.id.navgation1)
                             textViewPlace?.text = it.text
