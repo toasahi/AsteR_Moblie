@@ -22,10 +22,10 @@ import java.net.URL
 fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, MutableList<String>> {
 
     val API_KEY = api.getString(R.string.API_KEY)
-//    val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
-//            latA + "," + lngA + "&destination=" +
-//            lat + "," + lng + "&key=" + API_KEY + "&mode=walking"
-    val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=34.70608779534518,%20135.51224954179207&destination=34.7064324,135.5010341&key=AIzaSyCFtXqvRHj9BH7iHBJToobJO8oU6S293Sc&mode=walking"
+    val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
+            latA + "," + lngA + "&destination=" +
+            lat + "," + lng + "&key=" + API_KEY + "&mode=walking"
+//    val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=34.70608779534518,%20135.51224954179207&destination=34.7064324,135.5010341&key=AIzaSyCFtXqvRHj9BH7iHBJToobJO8oU6S293Sc&mode=walking"
     //API_URLをネットで検索ー＞データ確認可能
     Log.d("url", "$API_URL")
 
@@ -87,46 +87,6 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
         }
     }
     Thread.sleep(3000)
-
-
-//    GlobalScope.launch {
-//        val job = launch {
-//            println("あ〜あ、ちょっと待ってよぉ〜")
-//            //APIから情報を取得する.
-//            br = BufferedReader(InputStreamReader(url.openStream()))
-//            val str: String = br.readText() //データ
-//            Log.d("json", "json：" + str)
-//
-//            try {
-//                //routes/legs/steps
-//                val jsonObject = JSONObject(str)
-//                val jsonArray = jsonObject.getJSONArray("routes")
-//                val jsonArray2 = jsonArray.getJSONObject(0).getJSONArray("legs")
-//                val jsonArray3 = jsonArray2.getJSONObject(0).getJSONArray("steps")
-//
-//                //for文で経路の緯度経度を格納
-//                for (i in 0 until jsonArray3.length()) {
-//
-//                    val jsonData = jsonArray3.getJSONObject(i).getJSONObject("end_location")
-//                    val latData = jsonData.getString("lat")
-//                    val lngData = jsonData.getString("lng")
-//
-//                    RouteLatList.add(latData)
-//                    RouteLngList.add(lngData)
-//
-//                    Log.d("jsondata", "lat:" + latData)
-//                    Log.d("jsondata", "lng:" + lngData.toString())
-//                    Log.d("tane", "List:" + RouteLatList)
-//
-//                }
-//            } catch (e: JSONException) {
-//                e.printStackTrace()
-//            }
-//        }
-//        job.join()
-//        println("待ったよ!")
-//        Log.d("tane", "List:" + RouteLatList)
-//    }
 
         Log.d("tane", "List:soto" + RouteLatList)
         //経路の緯度経度リストを返す

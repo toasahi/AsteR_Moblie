@@ -44,10 +44,6 @@ fun PlaceList(): MutableList<Place> {
                 placeList.add((places[i]))
             }
         }
-//        //この場合300m圏内を表示
-//        if(distance < 300){
-//            placeList.add(places[i])
-//        }
 
     }
     Log.d("placeList", "placeList:" + placeList)

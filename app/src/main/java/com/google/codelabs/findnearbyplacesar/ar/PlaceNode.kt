@@ -116,10 +116,7 @@ class PlaceNode(
                         }
                     }
             }
-
         }
-
-
     }
 
 

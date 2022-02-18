@@ -14,25 +14,41 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <fragment android:name="com.google.codelabs.findnearbyplacesar.ar.PlacesArFragment"
-        android:id="@+id/ar_fragment"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <fragment
-        class="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/maps_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"/>
+        <fragment
+            android:id="@+id/ar_fragment"
+            android:name="com.google.codelabs.findnearbyplacesar.ar.PlacesArFragment"
+            android:layout_width="match_parent"
+            android:layout_height="512dp" />
 
-</LinearLayout>
+        <fragment
+            android:id="@+id/maps_fragment"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="219dp" />
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        app:srcCompat="@drawable/arrow_straight" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
