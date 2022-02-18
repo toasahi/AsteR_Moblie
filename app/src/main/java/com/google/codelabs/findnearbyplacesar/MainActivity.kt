@@ -58,10 +58,7 @@ import com.google.codelabs.findnearbyplacesar.model.Geometry
 import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
 import com.google.codelabs.findnearbyplacesar.model.getPositionVector
-import com.google.codelabs.findnearbyplacesar.near.PlaceList
-import com.google.codelabs.findnearbyplacesar.near.RouteAr
-import com.google.codelabs.findnearbyplacesar.near.nearby
-import com.google.codelabs.findnearbyplacesar.near.nearby2
+import com.google.codelabs.findnearbyplacesar.near.*
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -124,20 +121,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         }
         setContentView(R.layout.activity_main)
 
-
-        //ボタンを押すことで要素を削除
-        /*val testBt = findViewById<Button>(R.id.testButton)
-        testBt.setOnClickListener {
-            /*
-            val wkAnchor = anchor_list.get(i)
-            wkAnchor.detach()
-             */
-
-            val wkNode = node_list.get(i)
-            anchorNode!!.removeChild(wkNode)
-            i++
-        }*/
-
         //PlacesArFragment.ktのクラスを呼び出す
         arFragment = supportFragmentManager.findFragmentById(R.id.ar_fragment) as PlacesArFragment
 
@@ -154,16 +137,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         placesService = PlacesService.create()
         //位置情報API
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-
-
-//        arImageView.run{
-//            visibility = ImageView.VISIBLE
-//            postDelayed({
-//                animate().alpha(0f).setDuration(1000).withEndAction { visibility = ImageView.GONE }
-//            }, 2000)
-//        }
-
 
         setUpAr()
         setUpMaps()
@@ -197,8 +170,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     }
 
     private fun setUpAr() {
-
-
 
         /*//タップされた時の処理？
     arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
@@ -253,39 +224,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     while(hitTestIterator.hasNext()) {
                         val hitResult = hitTestIterator.next()
 
+                        //現在地が変わるたび
                         var distance = nearby2(places!![1].geometry.location.lat,places!![1].geometry.location.lng)
+                        var kakudo = getRouteLatLng(places!![1].geometry.location.lat,places!![1].geometry.location.lng)
                         Log.d("distance","$distance,i=$i")
                         Log.d("near_distance","$places")
-//
-//                        if(distance < 180 && i != 1){
-////                            if(node_list.size != 0){
-//                                val wkNode = node_list[i]
-//                                anchorNode!!.removeChild(wkNode)
-//                                i++
-//                                places!!.add(Route[route_count])
-//                                route_count += 1
-////                                firstrun = 0
-////                            }else{
-////                                firstrun = 1
-////                            }
-//                        }
                         Log.d("route_count","$route_count")
 
-//                        if(distance < 180){
-////                            if(node_list.size != 0){
-//                            val wkNode = node_list[i]
-//                            anchorNode!!.removeChild(wkNode)
-//                            i++
-//                            places!!.add(Route[route_count])
-//                            route_count += 1
-//                            firstrun = 0
-//                            }else{
-//                                firstrun = 1
-//                            }
-//                        }
 
-                        if(distance < 7){
-//                            if(node_list.size != 0) {
+                        if(distance < 10){
+
                             anchorNode!!.removeChild(node_list[1])
 
                             markers[markers.size - 1].isVisible = false
@@ -316,13 +264,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                             route_count ++
                             c_count++
-//                                firstrun = 0
-//                            }else{
-//                                firstrun = 1
-//                            }
-                        }
 
-                        //Log.d("routeList","$Route")
+                        }
 
                         if (firstrun == 0){
                             // Create anchor
@@ -333,19 +276,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                             addPlaces(anchorNode!!)
                             firstrun = 1
                         }
-
-
-                        /*
-                        //Create an anchor at the plane hit
-                        val modelAnchor = plane.createAnchor(hitResult.hitPose)
-
-                        //Attach a node to this anchor with the scene as the parent
-                        val anchorNode = AnchorNode(modelAnchor)
-                        anchorNode.setParent(arFragment.arSceneView.scene)
-*/
-
-
-
                     }
                 }
             }
@@ -382,8 +312,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             }
 
             node_list.add(placeNode)
-
-//            placeNode.removeChild()
 
             //マップにピンを配置する
             map?.let {
@@ -431,14 +359,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
     }
 
-//    override fun onOptionsItemSelected(place: Place): Boolean {
-//
-//        map?.addMarker(
-//            MarkerOptions()
-//                .position(place.geometry.location.latLng)
-//                .title(place.name)
-//        )
-//    }
 
     private fun setUpMaps() {
         //マップの初期化
@@ -517,8 +437,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     places.add(Route1)
                     //ルートのカウントを進める
                     route_count += 1
-//                    i += 1
-//                    places.addAll(Route)
+
                     Log.d("tanetone", places.toString())
 
                     this@MainActivity.places = places
