@@ -86,6 +86,8 @@ var route_count = 0
 //ゴールを入れる
 var goal:Place = Place("", "", "ローソン北区万歳町店", Geometry((GeometryLocation(lat=34.705697314917415, lng = 135.50431596239108))))
 var delete_goal_count = 0
+var next_corner_arrow:Place = Place("", "", "", Geometry((GeometryLocation(lat=0.0, lng = 0.0))))
+var arrow_count = 0
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateListener {
@@ -111,6 +113,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     private var places: MutableList<Place>? = null
     private var currentLocation: Location? = null
     private var map: GoogleMap? = null
+    private var distance_step = false
 
     private var firstrun = 0
 
@@ -225,46 +228,43 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                         val hitResult = hitTestIterator.next()
 
                         //現在地が変わるたび
-                        var distance = nearby2(places!![1].geometry.location.lat,places!![1].geometry.location.lng)
-                        var kakudo = getRouteLatLng(places!![1].geometry.location.lat,places!![1].geometry.location.lng)
-                        Log.d("distance","$distance,i=$i")
+//                        var distance = nearby2(places!![1].geometry.location.lat,places!![1].geometry.location.lng)
+                        var distance = nearby2(Route[route_count-1].geometry.location.lat, Route[route_count-1].geometry.location.lng)
+//                        var distance2 = nearby2(34.7066161,135.5029799)
+                        var kakudo = getRouteLatLng(Route[route_count-1].geometry.location.lat,Route[route_count-1].geometry.location.lng)
+                        Log.d("distance2","$distance")
                         Log.d("near_distance","$places")
                         Log.d("route_count","$route_count")
 
+                        if(markers.size < route_count){
+                            Log.e("finish","案内完了")
+                        }
 
-                        if(distance < 10){
-
-                            anchorNode!!.removeChild(node_list[1])
-
-                            markers[markers.size - 1].isVisible = false
-
-                            i++
-                            places!!.removeAt(1)
-                            places!!.add(Route[route_count])
-                            //マップにピンを配置する
-                            map?.let {
-                                val marker = it.addMarker(
-                                    MarkerOptions()
-                                        .position(places!![1].geometry.location.latLng)
-                                        .title(places!![1].name)
-                                )
-                                marker.tag = places!![1]
-                                markers.add(marker)
-                            }
+                        if(distance < 20 && places!!.size < 2){
+                            places!!.add(Route[route_count-1])
                             val placeNode = PlaceNode(this, places!![1],"右")
-
                             placeNode.setParent(anchorNode)
                             placeNode.localPosition =
                                 currentLocation?.latLng?.let { places!![1].getPositionVector(orientationAngles[0], it) }
                             placeNode.setOnTapListener { _, _ ->
                                 showInfoWindow(places!![1])
                             }
-                            node_list.removeAt(1)
                             node_list.add(placeNode)
-
-                            route_count ++
+                            arrow_count = 0
+                        } else if(distance < 10) {
+                            markers[markers.size - 1].isVisible = false
+//                            //マップにピンを配置する
+                            map?.let {
+                                val marker = it.addMarker(
+                                    MarkerOptions()
+                                        .position(Route[route_count].geometry.location.latLng)
+                                )
+                                marker.tag = Route[route_count].geometry.location.latLng
+                                markers.add(marker)
+                            }
+                            route_count++
                             c_count++
-
+                            //20m以内かつ目的地だけが配列に存在する
                         }
 
                         if (firstrun == 0){
@@ -275,6 +275,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                             anchorNode?.setParent(arFragment.arSceneView.scene)
                             addPlaces(anchorNode!!)
                             firstrun = 1
+                        }
+
+                        if(distance > 20 && arrow_count === 0){
+                            places!!.removeAt(1)
+                            anchorNode!!.removeChild(node_list[1])
+                            arrow_count = 1
+                            node_list.removeAt(1)
                         }
                     }
                 }
@@ -431,12 +438,14 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     val Json = ReadJson(places.get(0).geometry.location.lat, places.get(0).geometry.location.lng,this@MainActivity)
                     val Jsonlat = Json.first
                     val Jsonlng = Json.second
-                    Log.d("tane", "main:"+Json.toString())
                     Route = RouteAr(Jsonlat, Jsonlng)
                     val Route1 = Route[route_count]
                     places.add(Route1)
+                    next_corner_arrow = Route1
                     //ルートのカウントを進める
                     route_count += 1
+
+                    Log.d("route1","$Route1")
 
                     Log.d("tanetone", places.toString())
 
