@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     private var places: MutableList<Place>? = null
     private var currentLocation: Location? = null
     private var map: GoogleMap? = null
+    private var distance_step = false
 
     private var firstrun = 0
 
@@ -235,42 +236,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                         Log.d("near_distance","$places")
                         Log.d("route_count","$route_count")
 
-                        if(distance < 10) {
+                        if(markers.size < route_count){
+                            Log.e("finish","案内完了")
+                        }
 
-//                            anchorNode!!.removeChild(node_list[1])
-                            Log.d("marker","${markers.size}")
-
-                            markers[markers.size - 1].isVisible = false
-                            route_count++
-                            c_count++
-//                            places!!.removeAt(1)
-//                            places!!.add(Route[route_count])
-//                            //マップにピンを配置する
-//                            map?.let {
-//                                val marker = it.addMarker(
-//                                    MarkerOptions()
-//                                        .position(places!![1].geometry.location.latLng)
-//                                        .title(places!![1].name)
-//                                )
-//                                marker.tag = places!![1]
-//                                markers.add(marker)
-//                            }
-//                            val placeNode = PlaceNode(this, places!![1], "右")
-
-//                            placeNode.setParent(anchorNode)
-//                            placeNode.localPosition =
-//                                currentLocation?.latLng?.let { places!![1].getPositionVector(orientationAngles[0], it) }
-//                            placeNode.setOnTapListener { _, _ ->
-//                                showInfoWindow(places!![1])
-//                            }
-//                            node_list.removeAt(1)
-//                            node_list.add(placeNode)
-
-//                            route_count++
-//                            c_count++
-
-                            //20m以内かつ目的地だけが配列に存在する
-                        }else if(distance < 20 && places!!.size < 2){
+                        if(distance < 20 && places!!.size < 2){
                             places!!.add(Route[route_count-1])
                             val placeNode = PlaceNode(this, places!![1],"右")
                             placeNode.setParent(anchorNode)
@@ -280,20 +250,21 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                                 showInfoWindow(places!![1])
                             }
                             node_list.add(placeNode)
-                            arrow_count--
-
-                        }else if(distance > 20 && arrow_count === 0){
-//                            map?.let {
-//                                val marker = it.addMarker(
-//                                    MarkerOptions()
-//                                        .position(places!![1].geometry.location.latLng)
-//                                        .title(places!![1].name)
-//                                )
-//                                marker.tag = places!![1]
-//                                markers.add(marker)
-//                                arrow_count++
-//                            }
-//                            arrow_count++
+                            arrow_count = 0
+                        } else if(distance < 10) {
+                            markers[markers.size - 1].isVisible = false
+//                            //マップにピンを配置する
+                            map?.let {
+                                val marker = it.addMarker(
+                                    MarkerOptions()
+                                        .position(Route[route_count].geometry.location.latLng)
+                                )
+                                marker.tag = Route[route_count].geometry.location.latLng
+                                markers.add(marker)
+                            }
+                            route_count++
+                            c_count++
+                            //20m以内かつ目的地だけが配列に存在する
                         }
 
                         if (firstrun == 0){
@@ -309,7 +280,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                         if(distance > 20 && arrow_count === 0){
                             places!!.removeAt(1)
                             anchorNode!!.removeChild(node_list[1])
-                            arrow_count++
+                            arrow_count = 1
                             node_list.removeAt(1)
                         }
                     }
