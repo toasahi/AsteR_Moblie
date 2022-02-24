@@ -1,21 +1,8 @@
-// Copyright 2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package com.google.codelabs.findnearbyplacesar
 
 import android.Manifest
 import android.app.ActivityManager
+import android.app.AlertDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
@@ -228,60 +215,84 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                         val hitResult = hitTestIterator.next()
 
                         //現在地が変わるたび
-//                        var distance = nearby2(places!![1].geometry.location.lat,places!![1].geometry.location.lng)
                         var distance = nearby2(Route[route_count-1].geometry.location.lat, Route[route_count-1].geometry.location.lng)
-//                        var distance2 = nearby2(34.7066161,135.5029799)
                         var kakudo = getRouteLatLng(Route[route_count-1].geometry.location.lat,Route[route_count-1].geometry.location.lng)
                         Log.d("distance2","$distance")
-                        Log.d("near_distance","$places")
-                        Log.d("route_count","$route_count")
 
-                        if(markers.size < route_count){
-                            Log.e("finish","案内完了")
-                        }
-
-                        if(distance < 20 && places!!.size < 2){
-                            places!!.add(Route[route_count-1])
-                            val placeNode = PlaceNode(this, places!![1],"右")
-                            placeNode.setParent(anchorNode)
-                            placeNode.localPosition =
-                                currentLocation?.latLng?.let { places!![1].getPositionVector(orientationAngles[0], it) }
-                            placeNode.setOnTapListener { _, _ ->
-                                showInfoWindow(places!![1])
+                        //曲がり角を歩いてきたかの判定
+                        if(Route.size > route_count){
+                            if(distance < 20 && places!!.size < 2){
+                                places!!.add(Route[route_count-1])
+                                val placeNode = PlaceNode(this, places!![1],"右")
+                                placeNode.setParent(anchorNode)
+                                placeNode.localPosition =
+                                    currentLocation?.latLng?.let { places!![1].getPositionVector(orientationAngles[0], it) }
+                                placeNode.setOnTapListener { _, _ ->
+                                    showInfoWindow(places!![1])
+                                }
+                                node_list.add(placeNode)
+                                arrow_count = 0
+                            } else if(distance < 10) {
+                                markers[markers.size - 1].isVisible = false
+                                //マップにピンを配置する
+//                                曲がり角がなくなると入らない
+                                if(route_count != Route.size){
+                                    map?.let {
+                                        val marker = it.addMarker(
+                                            MarkerOptions()
+                                                .position(Route[route_count].geometry.location.latLng)
+                                        )
+                                        marker.tag = Route[route_count].geometry.location.latLng
+                                        markers.add(marker)
+                                    }
+                                }
+                                route_count++
+                                c_count++
+                                //20m以内かつ目的地だけが配列に存在する
                             }
-                            node_list.add(placeNode)
-                            arrow_count = 0
-                        } else if(distance < 10) {
-                            markers[markers.size - 1].isVisible = false
-//                            //マップにピンを配置する
-                            map?.let {
-                                val marker = it.addMarker(
-                                    MarkerOptions()
-                                        .position(Route[route_count].geometry.location.latLng)
-                                )
-                                marker.tag = Route[route_count].geometry.location.latLng
-                                markers.add(marker)
+
+                            if (firstrun == 0){
+                                // Create anchor
+                                val anchor = hitResult.createAnchor()
+                                anchor_list.add(anchor)
+                                anchorNode = AnchorNode(anchor)
+                                anchorNode?.setParent(arFragment.arSceneView.scene)
+                                addPlaces(anchorNode!!)
+                                firstrun = 1
+
+//                                目的地のARを削除する
+                                anchorNode!!.removeChild(node_list[0])
+//                                node_list.removeAt(0)
                             }
-                            route_count++
-                            c_count++
-                            //20m以内かつ目的地だけが配列に存在する
-                        }
-
-                        if (firstrun == 0){
-                            // Create anchor
-                            val anchor = hitResult.createAnchor()
-                            anchor_list.add(anchor)
-                            anchorNode = AnchorNode(anchor)
-                            anchorNode?.setParent(arFragment.arSceneView.scene)
-                            addPlaces(anchorNode!!)
-                            firstrun = 1
-                        }
-
-                        if(distance > 20 && arrow_count === 0){
-                            places!!.removeAt(1)
-                            anchorNode!!.removeChild(node_list[1])
-                            arrow_count = 1
-                            node_list.removeAt(1)
+                            if(distance > 20 && arrow_count === 0){
+                                places!!.removeAt(1)
+                                anchorNode!!.removeChild(node_list[1])
+                                arrow_count = 1
+                                node_list.removeAt(1)
+                            }
+                        }else{
+                            //最初に目的地にいる
+                            if (firstrun == 0){
+                                places!!.removeAt(1)
+                                // Create anchor
+                                val anchor = hitResult.createAnchor()
+                                anchor_list.add(anchor)
+                                anchorNode = AnchorNode(anchor)
+                                anchorNode?.setParent(arFragment.arSceneView.scene)
+                                addPlaces(anchorNode!!)
+                                firstrun = 2
+                            //経路を踏んで目的地にきた
+                            }else if(firstrun == 1){
+                                anchorNode!!.removeChild(node_list[0])
+                                node_list.removeAt(0)
+                                places!!.removeAt(1)
+                                val anchor = hitResult.createAnchor()
+                                anchor_list.add(anchor)
+                                anchorNode = AnchorNode(anchor)
+                                anchorNode?.setParent(arFragment.arSceneView.scene)
+                                addPlaces(anchorNode!!)
+                                firstrun = 2
+                            }
                         }
                     }
                 }
