@@ -101,8 +101,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     private var currentLocation: Location? = null
     private var map: GoogleMap? = null
     private var distance_step = false
+    var arrow_image: ImageView? = null
 
-    private var firstrun = 0
+        private var firstrun = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,6 +128,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         placesService = PlacesService.create()
         //位置情報API
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        arrow_image = findViewById(R.id.imageView2)
 
         setUpAr()
         setUpMaps()
@@ -222,6 +225,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                         //曲がり角を歩いてきたかの判定
                         if(Route.size > route_count){
                             if(distance < 20 && places!!.size < 2){
+                                arrow_image!!.visibility = View.INVISIBLE
                                 places!!.add(Route[route_count-1])
                                 val placeNode = PlaceNode(this, places!![1],"右")
                                 placeNode.setParent(anchorNode)
@@ -265,6 +269,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 //                                node_list.removeAt(0)
                             }
                             if(distance > 20 && arrow_count === 0){
+                                arrow_image!!.visibility = View.VISIBLE
                                 places!!.removeAt(1)
                                 anchorNode!!.removeChild(node_list[1])
                                 arrow_count = 1
