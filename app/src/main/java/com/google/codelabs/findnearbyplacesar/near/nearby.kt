@@ -59,7 +59,7 @@ fun getRadian(lat: Double, lng: Double): Double {
 fun getRouteLatLng(lat: Double, lng: Double): LatLng {
     var x1 = current_lat  // 現在地lat
     var y1 = current_lng  // 現在地lng
-    var d = nearby(lat, lng) // 距離
+    var d = 5//nearby(lat, lng) // 距離
     d = d / 100000
     var a = getRadian(lat, lng)  // 角度
 

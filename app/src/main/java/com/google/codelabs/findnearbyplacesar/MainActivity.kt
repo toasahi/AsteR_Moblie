@@ -1,6 +1,7 @@
 package com.google.codelabs.findnearbyplacesar
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.Context
@@ -130,6 +131,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         arrow_image = findViewById(R.id.imageView2)
+        val objectAnimator = ObjectAnimator.ofFloat(arrow_image, "translationY", 50f, -60f)
+        objectAnimator.duration = 2000
+        objectAnimator.repeatCount = -1
+        objectAnimator.start()
 
         setUpAr()
         setUpMaps()
@@ -219,7 +224,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                         //現在地が変わるたび
                         var distance = nearby2(Route[route_count-1].geometry.location.lat, Route[route_count-1].geometry.location.lng)
-                        var kakudo = getRouteLatLng(Route[route_count-1].geometry.location.lat,Route[route_count-1].geometry.location.lng)
+                        var coor = getRouteLatLng(Route[route_count-1].geometry.location.lat,Route[route_count-1].geometry.location.lng)
                         Log.d("distance2","$distance")
 
                         //曲がり角を歩いてきたかの判定
@@ -286,6 +291,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                                 anchorNode?.setParent(arFragment.arSceneView.scene)
                                 addPlaces(anchorNode!!)
                                 firstrun = 2
+                                arrow_image!!.visibility = View.VISIBLE
                             //経路を踏んで目的地にきた
                             }else if(firstrun == 1){
                                 anchorNode!!.removeChild(node_list[0])
