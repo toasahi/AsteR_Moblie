@@ -32,25 +32,28 @@
             android:id="@+id/ar_fragment"
             android:name="com.google.codelabs.findnearbyplacesar.ar.PlacesArFragment"
             android:layout_width="match_parent"
-            android:layout_height="512dp" />
+            android:layout_height="0dp"
+            android:layout_weight="0.7" />
 
         <fragment
             android:id="@+id/maps_fragment"
             class="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="219dp" />
+            android:layout_height="0dp"
+            android:layout_weight="0.3" />
 
     </LinearLayout>
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:scaleType="matrix"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout"
-        app:srcCompat="@drawable/arrow_straight"
-        android:visibility="invisible"
-    />
+        app:srcCompat="@drawable/arrow_straight" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
