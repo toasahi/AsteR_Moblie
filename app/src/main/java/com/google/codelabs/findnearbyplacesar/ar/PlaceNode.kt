@@ -54,9 +54,6 @@ class PlaceNode(
 
         if (place != null) {
             if(place.id == "y"){
-
-                //var dist = google.maps.geometry.spherical.computeLength(place.geometry);
-
                 ViewRenderable.builder()
                     .setView(context, R.layout.arrow)
                     .build()
@@ -65,11 +62,9 @@ class PlaceNode(
                         placeRenderable = renderable
 
                         place?.let {
-
                             textViewPlace = renderable.view.findViewById(R.id.navgation1)
                             textViewPlace?.text = it.text
                             imageViewArrow = renderable.view.findViewById(R.id.arrowImage)
-                            Log.d("corner", cornerArray[c_count])
                             val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
                             if(Regex(cornerArray[c_count]).containsMatchIn("左")){
                                 imageViewArrow?.setImageResource(R.drawable.arrow_left)
@@ -85,22 +80,7 @@ class PlaceNode(
                                 objectAnimator.start()
                             }
                         }
-//                        nearby()
-//                        val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
-//                        arrowImageView.run{
-//                            visibility = View.VISIBLE
-//                            postDelayed({
-//                                animate().alpha(0f).setDuration(1000).withEndAction { visibility = View.GONE }
-//                            },5000)
-////                            animate().translationX()
-//                        }
-//                        val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 0f, 400f)
-//                        objectAnimator.duration = 2000
-//                        objectAnimator.repeatCount = -1
-//                        objectAnimator.start()
                     }
-
-
             }else {
                 ViewRenderable.builder()
                     .setView(context, R.layout.place_view)

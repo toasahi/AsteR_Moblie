@@ -38,14 +38,11 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
 
 
     //非同期処理
-    println("あ～あ、ちょっと待ってよぉ～")
     GlobalScope.launch {
-        println("あ〜あ、ちょっと待ってよぉ〜")
         //APIから情報を取得する.
         br = BufferedReader(InputStreamReader(url.openStream()))
         val str: String = br.readText() //データ
         Log.d("json", "json：" + str)
-
         try {
             //routes/legs/steps
             val jsonObject = JSONObject(str)
@@ -87,8 +84,6 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
         }
     }
     Thread.sleep(3000)
-
-        Log.d("tane", "List:soto" + RouteLatList)
         //経路の緯度経度リストを返す
         return RouteLatList to RouteLngList
 

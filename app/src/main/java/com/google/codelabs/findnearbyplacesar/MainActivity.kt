@@ -169,16 +169,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
     private fun setUpAr() {
 
-        /*//タップされた時の処理？
-    arFragment.setOnTapArPlaneListener { hitResult, _, _ ->
-        // Create anchor
-        val anchor = hitResult.createAnchor()
-        anchorNode = AnchorNode(anchor)
-        anchorNode?.setParent(arFragment.arSceneView.scene)
-        addPlaces(anchorNode!!)
-    }
-
-         */
     }
 
     override fun onUpdate(frameTime: FrameTime?) {
@@ -355,12 +345,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             }
         }
         if(delete_goal_count == 0){
-//            this@MainActivity.places?.removeAt(0)
-            Log.d("goal","$goal")
             delete_goal_count += 1
         }
-
-        Log.d("delete_count","$places");
     }
 
 

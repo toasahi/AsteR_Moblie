@@ -46,7 +46,7 @@ fun PlaceList(): MutableList<Place> {
         }
 
     }
-    Log.d("placeList", "placeList:" + placeList)
+    Log.d("placeList", "placeList:$placeList")
     return placeList
 
 }
