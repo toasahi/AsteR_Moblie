@@ -14,10 +14,13 @@
 
 package com.google.codelabs.findnearbyplacesar.model
 
+import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.ar.sceneform.math.Vector3
+import com.google.codelabs.findnearbyplacesar.near.nearby
 import com.google.maps.android.ktx.utils.sphericalHeading
 import kotlin.math.cos
+import kotlin.math.ln
 import kotlin.math.sin
 
 /**
@@ -25,7 +28,7 @@ import kotlin.math.sin
  */
 data class Place(
     val id: String,
-    val icon: String,
+    val text: String,
     val name: String,
     val geometry: Geometry
 ) {
@@ -44,7 +47,15 @@ data class Place(
 fun Place.getPositionVector(azimuth: Float, latLng: LatLng): Vector3 {
     val placeLatLng = this.geometry.location.latLng
     val heading = latLng.sphericalHeading(placeLatLng)
-    val r = -2f
+
+    val lat = placeLatLng.latitude
+    val lng = placeLatLng.longitude
+
+    Log.d("ponpoko", "lat:" + lat + ", lng:" + lng)
+    val placeto = nearby(lat, lng).toFloat() / -1000
+//  マイナスほど遠くなる
+    val r = -2f * placeto
+//    val r = -2f
     val x = r * sin(azimuth + heading).toFloat()
     val y = 1f
     val z = r * cos(azimuth + heading).toFloat()

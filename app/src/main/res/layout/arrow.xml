@@ -2,12 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_width="match_parent"
+    android:layout_width="800dp"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="800dp"
+        android:layout_height="wrap_content"
+        >
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/arrowImage"
+        android:gravity="left"
+        android:layout_width="300dp"
+        android:layout_height="550dp"
+        app:srcCompat="@drawable/arrow" />
+
+    <TextView
+        android:id="@+id/navgation1"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/arrow" />
+        android:textAlignment="center"
+        android:gravity="center"
+        android:text=""
+        android:visibility="gone"
+        android:textSize="15pt"/>
+
+    </RelativeLayout>
 </LinearLayout>

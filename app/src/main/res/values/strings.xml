@@ -15,5 +15,6 @@
 -->
 
 <resources>
-  <string name="app_name">FindNearbyPlacesAr</string>
+  <string name="app_name">AsteR</string>
+  <string name="API_KEY">AIzaSyCFtXqvRHj9BH7iHBJToobJO8oU6S293Sc</string>
 </resources>
