@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         arrow_image = findViewById(R.id.imageView2)
-        val objectAnimator = ObjectAnimator.ofFloat(arrow_image, "translationY", 50f, -60f)
+        val objectAnimator = ObjectAnimator.ofFloat(arrow_image, "translationY", 50f, -50f)
         objectAnimator.duration = 2000
         objectAnimator.repeatCount = -1
         objectAnimator.start()
@@ -268,6 +268,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                                 anchorNode?.setParent(arFragment.arSceneView.scene)
                                 addPlaces(anchorNode!!)
                                 firstrun = 1
+                                arrow_image!!.visibility = View.VISIBLE
 
 //                                目的地のARを削除する
                                 anchorNode!!.removeChild(node_list[0])
