@@ -1,5 +1,7 @@
 # AsteR(アスター)
 
+![aster_img](https://user-images.githubusercontent.com/82006976/157170888-11646c5f-83cb-4c49-a8cd-734158f89072.jpg)
+
 ### 名前の由来
 disaster(災害)からdisの否定の部分を消しAsterという花の名前にしました。
 Asterの花言葉は『思い出』『追憶』の意味があります。また、色によって花言葉が変化し
@@ -15,9 +17,6 @@ Asterの花言葉は『思い出』『追憶』の意味があります。また
 #### 言語
 Kotlin 
 ARCore
-
-#### LP
-![aster_img](https://user-images.githubusercontent.com/82006976/157170888-11646c5f-83cb-4c49-a8cd-734158f89072.jpg)
 
 #### 利用可能な端末
 [ARCoreに対応している端末](https://developers.google.com/ar/devices)
