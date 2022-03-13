@@ -39,7 +39,7 @@ class PlaceNode(
         }
 
         if (place != null) {
-            if(place.id == "y"){
+            if (place.id == "y") {
                 ViewRenderable.builder()
                     .setView(context, R.layout.arrow)
                     .build()
@@ -52,13 +52,13 @@ class PlaceNode(
                             textViewPlace?.text = it.text
                             imageViewArrow = renderable.view.findViewById(R.id.arrowImage)
                             val arrowImageView: ImageView = renderable.view.findViewById(R.id.arrowImage)
-                            if(Regex(cornerArray[c_count]).containsMatchIn("左")){
+                            if (Regex(cornerArray[c_count]).containsMatchIn("左")) {
                                 imageViewArrow?.setImageResource(R.drawable.arrow_left)
                                 val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 400f, 0f)
                                 objectAnimator.duration = 2000
                                 objectAnimator.repeatCount = -1
                                 objectAnimator.start()
-                            }else{
+                            } else {
                                 imageViewArrow?.setImageResource(R.drawable.allow_right)
                                 val objectAnimator = ObjectAnimator.ofFloat(arrowImageView, "translationX", 0f, 400f)
                                 objectAnimator.duration = 2000
@@ -67,7 +67,7 @@ class PlaceNode(
                             }
                         }
                     }
-            }else {
+            } else {
                 ViewRenderable.builder()
                     .setView(context, R.layout.place_view)
                     .build()

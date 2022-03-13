@@ -27,7 +27,7 @@ fun nearby(lat: Double, lng: Double): Double {
     val latLngA = LatLng(current_lat, current_lng)
     val latLngB = LatLng(lat, lng)
 
-    Log.d("latLngA","lat:$latA lngA:$lngA")
+    Log.d("latLngA", "lat:$latA lngA:$lngA")
     // 距離をメートル単位で返す
     return SphericalUtil.computeDistanceBetween(latLngA, latLngB)
 }
@@ -52,8 +52,8 @@ fun getRouteLatLng(lat: Double, lng: Double): LatLng {
     d /= 100000
     var a = getRadian(lat, lng)  // 角度
 
-    var x2 = x1 + d * cos( a * (Math.PI / 180) )
-    var y2 = y1 + d * sin( a * (Math.PI / 180) )
+    var x2 = x1 + d * cos(a * (Math.PI / 180))
+    var y2 = y1 + d * sin(a * (Math.PI / 180))
     Log.d("Radian", "current$current_lat,$current_lng")
     Log.d("Radian", "角度：" + a + ", 座標：" + LatLng(x2, y2))
     return LatLng(x2, y2)

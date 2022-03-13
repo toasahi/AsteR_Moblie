@@ -37,7 +37,6 @@ fun Place.getPositionVector(azimuth: Float, latLng: LatLng): Vector3 {
     val lat = placeLatLng.latitude
     val lng = placeLatLng.longitude
 
-    Log.d("ponpoko", "lat:" + lat + ", lng:" + lng)
     val placeto = nearby(lat, lng).toFloat() / -1000
 //  マイナスほど遠くなる
     val r = -2f * placeto

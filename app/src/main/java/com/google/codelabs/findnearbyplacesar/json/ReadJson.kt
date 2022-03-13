@@ -25,9 +25,7 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
     val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=" +
             latA + "," + lngA + "&destination=" +
             lat + "," + lng + "&key=" + API_KEY + "&mode=walking"
-//    val API_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=34.70608779534518,%20135.51224954179207&destination=34.7064324,135.5010341&key=AIzaSyCFtXqvRHj9BH7iHBJToobJO8oU6S293Sc&mode=walking"
     //API_URLをネットで検索ー＞データ確認可能
-    Log.d("url", "$API_URL")
 
     var url = URL(API_URL)
     var br: BufferedReader
@@ -35,7 +33,6 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
     //経路を格納するリスト
     var RouteLatList: MutableList<String> = ArrayList()
     var RouteLngList: MutableList<String> = ArrayList()
-
 
     //非同期処理
     GlobalScope.launch {
@@ -68,16 +65,10 @@ fun ReadJson(lat: Double, lng: Double, api: Context): Pair<MutableList<String>, 
                     }else{
                         cornerArray.add("左")
                     }
-                    Log.d("maneuverD", "maneuver" + i + "回目" + maneuver)
                 }
 
                 RouteLatList.add(latData)
                 RouteLngList.add(lngData)
-
-                Log.d("jsondata", "lat:" + latData)
-                Log.d("jsondata", "lng:" + lngData.toString())
-                Log.d("tane", "List:" + RouteLatList)
-
             }
         } catch (e: JSONException) {
             e.printStackTrace()

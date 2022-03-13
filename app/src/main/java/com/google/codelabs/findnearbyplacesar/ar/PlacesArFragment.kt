@@ -1,5 +1,3 @@
-
-
 package com.google.codelabs.findnearbyplacesar.ar
 
 import android.Manifest

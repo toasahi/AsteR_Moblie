@@ -1,11 +1,9 @@
 package com.google.codelabs.findnearbyplacesar
 
-import android.Manifest
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.ActivityManager
-import android.app.AlertDialog
 import android.content.Context
-import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -13,13 +11,10 @@ import android.hardware.SensorManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.getSystemService
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -35,8 +30,6 @@ import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.FrameTime
 import com.google.ar.sceneform.Scene
 import com.google.ar.sceneform.math.Vector3
-import com.google.ar.sceneform.ux.ArFragment
-import com.google.ar.sceneform.ux.TransformableNode
 import com.google.codelabs.findnearbyplacesar.api.NearbyPlacesResponse
 import com.google.codelabs.findnearbyplacesar.api.PlacesService
 import com.google.codelabs.findnearbyplacesar.ar.PlaceNode
@@ -47,7 +40,6 @@ import com.google.codelabs.findnearbyplacesar.model.GeometryLocation
 import com.google.codelabs.findnearbyplacesar.model.Place
 import com.google.codelabs.findnearbyplacesar.model.getPositionVector
 import com.google.codelabs.findnearbyplacesar.near.*
-import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -59,22 +51,25 @@ var current_lat: Double = 0.0
 var current_lng: Double = 0.0
 
 var anchor_list: MutableList<Anchor> = arrayListOf()
+
 //要素のノードを代入する
 var node_list: MutableList<PlaceNode> = arrayListOf()
-var i = 0
-var load_count = 0
+
 //曲がり角を入れる変数
 var Route: MutableList<Place> = arrayListOf()
+
 //曲がり角の右折・左折データ
 var cornerArray: MutableList<String> = arrayListOf()
 var c_count = 0
 
 //ルートを進めるindex
 var route_count = 0
+
 //ゴールを入れる
-var goal:Place = Place("", "", "ローソン北区万歳町店", Geometry((GeometryLocation(lat=34.705697314917415, lng = 135.50431596239108))))
+var goal: Place =
+    Place("", "", "ローソン北区万歳町店", Geometry((GeometryLocation(lat = 34.705697314917415, lng = 135.50431596239108))))
 var delete_goal_count = 0
-var next_corner_arrow:Place = Place("", "", "", Geometry((GeometryLocation(lat=0.0, lng = 0.0))))
+var next_corner_arrow: Place = Place("", "", "", Geometry((GeometryLocation(lat = 0.0, lng = 0.0))))
 var arrow_count = 0
 
 
@@ -101,11 +96,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     private var places: MutableList<Place>? = null
     private var currentLocation: Location? = null
     private var map: GoogleMap? = null
-    private var distance_step = false
-    var arrow_image: ImageView? = null
+    private var arrow_image: ImageView? = null
 
-        private var firstrun = 0
+    private var firstrun = 0
 
+    @SuppressLint("ObjectAnimatorBinding")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!isSupportedDevice()) {
@@ -178,7 +173,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
         //get the trackables to ensure planes are detected
         val var3 = frame.getUpdatedTrackables(Plane::class.java).iterator()
-        while(var3.hasNext()) {
+        while (var3.hasNext()) {
             val plane = var3.next() as Plane
 
             //If a plane has been detected & is being tracked by ARCore
@@ -192,10 +187,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                 val iterableAnchor = frame.updatedAnchors.iterator()
 
                 //place the first object only if no previous anchors were added
-                if(!iterableAnchor.hasNext()) {
+                if (!iterableAnchor.hasNext()) {
                     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-                        if (location == null){
-                            Log.e(TAG,"Could not get location (null)")
+                        if (location == null) {
+                            Log.e(TAG, "Could not get location (null)")
                         }
                         currentLocation = location
                         current_lat = location.latitude
@@ -209,33 +204,44 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                     //iterate through all hits
                     val hitTestIterator = hitTest.iterator()
-                    while(hitTestIterator.hasNext()) {
+                    while (hitTestIterator.hasNext()) {
                         val hitResult = hitTestIterator.next()
 
                         //現在地が変わるたび
-                        var distance = nearby2(Route[route_count-1].geometry.location.lat, Route[route_count-1].geometry.location.lng)
-                        var coor = getRouteLatLng(Route[route_count-1].geometry.location.lat,Route[route_count-1].geometry.location.lng)
-                        Log.d("distance2","$distance")
+                        var distance = nearby2(
+                            Route[route_count - 1].geometry.location.lat,
+                            Route[route_count - 1].geometry.location.lng
+                        )
+                        var coor = getRouteLatLng(
+                            Route[route_count - 1].geometry.location.lat,
+                            Route[route_count - 1].geometry.location.lng
+                        )
+                        Log.d("distance2", "$distance")
 
                         //曲がり角を歩いてきたかの判定
-                        if(Route.size > route_count){
-                            if(distance < 20 && places!!.size < 2){
+                        if (Route.size > route_count) {
+                            if (distance < 20 && places!!.size < 2) {
                                 arrow_image!!.visibility = View.INVISIBLE
-                                places!!.add(Route[route_count-1])
-                                val placeNode = PlaceNode(this, places!![1],"右")
+                                places!!.add(Route[route_count - 1])
+                                val placeNode = PlaceNode(this, places!![1], "右")
                                 placeNode.setParent(anchorNode)
                                 placeNode.localPosition =
-                                    currentLocation?.latLng?.let { places!![1].getPositionVector(orientationAngles[0], it) }
+                                    currentLocation?.latLng?.let {
+                                        places!![1].getPositionVector(
+                                            orientationAngles[0],
+                                            it
+                                        )
+                                    }
                                 placeNode.setOnTapListener { _, _ ->
                                     showInfoWindow(places!![1])
                                 }
                                 node_list.add(placeNode)
                                 arrow_count = 0
-                            } else if(distance < 10) {
+                            } else if (distance < 10) {
                                 markers[markers.size - 1].isVisible = false
                                 //マップにピンを配置する
 //                                曲がり角がなくなると入らない
-                                if(route_count != Route.size){
+                                if (route_count != Route.size) {
                                     map?.let {
                                         val marker = it.addMarker(
                                             MarkerOptions()
@@ -250,7 +256,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                                 //20m以内かつ目的地だけが配列に存在する
                             }
 
-                            if (firstrun == 0){
+                            if (firstrun == 0) {
                                 // Create anchor
                                 val anchor = hitResult.createAnchor()
                                 anchor_list.add(anchor)
@@ -264,16 +270,16 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                                 anchorNode!!.removeChild(node_list[0])
 //                                node_list.removeAt(0)
                             }
-                            if(distance > 20 && arrow_count === 0){
+                            if (distance > 20 && arrow_count === 0) {
                                 arrow_image!!.visibility = View.VISIBLE
                                 places!!.removeAt(1)
                                 anchorNode!!.removeChild(node_list[1])
                                 arrow_count = 1
                                 node_list.removeAt(1)
                             }
-                        }else{
+                        } else {
                             //最初に目的地にいる
-                            if (firstrun == 0){
+                            if (firstrun == 0) {
                                 places!!.removeAt(1)
                                 // Create anchor
                                 val anchor = hitResult.createAnchor()
@@ -283,8 +289,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                                 addPlaces(anchorNode!!)
                                 firstrun = 2
                                 arrow_image!!.visibility = View.VISIBLE
-                            //経路を踏んで目的地にきた
-                            }else if(firstrun == 1){
+                                //経路を踏んで目的地にきた
+                            } else if (firstrun == 1) {
                                 anchorNode!!.removeChild(node_list[0])
                                 node_list.removeAt(0)
                                 places!!.removeAt(1)
@@ -323,7 +329,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
         //場所を順番に取得する
         for (place in places) {
             // ARに場所を追加
-            val placeNode = PlaceNode(this, place,"右")
+            val placeNode = PlaceNode(this, place, "右")
 
             placeNode.setParent(anchorNode)
             placeNode.localPosition = place.getPositionVector(orientationAngles[0], currentLocation.latLng)
@@ -344,11 +350,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                 markers.add(marker)
             }
         }
-        if(delete_goal_count == 0){
+        if (delete_goal_count == 0) {
             delete_goal_count += 1
         }
     }
-
 
 
     private fun Frame.screenCenter(): Vector3 {
@@ -372,7 +377,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
             return@firstOrNull placeTag == place
         }
         matchingMarker?.showInfoWindow()
-
     }
 
 
@@ -400,11 +404,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
     //現在地の取得
     private fun getCurrentLocation(onSuccess: (Location) -> Unit) {
-
-
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location == null){
-                Log.e(TAG,"Could not get location (null)")
+            if (location == null) {
+                Log.e(TAG, "Could not get location (null)")
             }
             currentLocation = location
             latA = location.latitude
@@ -445,7 +447,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                     places = PlaceList(resultPlace)
                     //一番近い目的地までのルートを取得(lat, lng)
-                    val Json = ReadJson(places.get(0).geometry.location.lat, places.get(0).geometry.location.lng,this@MainActivity)
+                    val Json = ReadJson(
+                        places.get(0).geometry.location.lat,
+                        places.get(0).geometry.location.lng,
+                        this@MainActivity
+                    )
                     val Jsonlat = Json.first
                     val Jsonlng = Json.second
                     Route = RouteAr(Jsonlat, Jsonlng)

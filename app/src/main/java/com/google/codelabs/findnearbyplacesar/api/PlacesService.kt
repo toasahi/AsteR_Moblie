@@ -1,4 +1,3 @@
-
 package com.google.codelabs.findnearbyplacesar.api
 
 import okhttp3.OkHttpClient
