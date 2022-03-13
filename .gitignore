@@ -4,3 +4,4 @@ build/
 local.properties
 app/src/main/res/values/strings.xml
 app/release/
+app/src/main/res/values/key.xml

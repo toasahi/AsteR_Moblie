@@ -418,13 +418,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
     //近くの場所を取得
     //ここでは"school"を取得
     private fun getNearbyPlaces(location: Location) {
-        val apiKey = this.getString(R.string.google_maps_key)
-
+        var apiKey = this.getString(R.string.API_GOOGLE_KEY)
         placesService.nearbyPlaces(
             apiKey = apiKey,
             location = "${location.latitude},${location.longitude}",
             radiusInMeters = 2000,
-            placeType = "school"
+            placeType = "park"
         ).enqueue(
             object : Callback<NearbyPlacesResponse> {
                 override fun onFailure(call: Call<NearbyPlacesResponse>, t: Throwable) {
@@ -442,7 +441,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
 
                     //PlaceListで取得したデータを格納
                     val places: MutableList<Place>
-                    places = PlaceList()
+                    val resultPlace = response.body()?.results ?: emptyList<Place>().toMutableList()
+
+                    places = PlaceList(resultPlace)
                     //一番近い目的地までのルートを取得(lat, lng)
                     val Json = ReadJson(places.get(0).geometry.location.lat, places.get(0).geometry.location.lng,this@MainActivity)
                     val Jsonlat = Json.first
@@ -453,11 +454,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener, Scene.OnUpdateLis
                     next_corner_arrow = Route1
                     //ルートのカウントを進める
                     route_count += 1
-
-                    Log.d("route1","$Route1")
-
-                    Log.d("tanetone", places.toString())
-
                     this@MainActivity.places = places
                 }
             }
